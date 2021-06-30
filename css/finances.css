@@ -1,0 +1,84 @@
+#FinancesWindow {
+  position: absolute;
+  z-index: 1;
+  background: black;
+  border: 1px solid white;
+  min-height: 290px;
+  min-width: 440px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+#FinancesWindowheader {
+  border: 1px solid white;
+  padding: 10px;
+  height: 15px;
+  background-color: grey;
+  color: #fff;
+}
+#FinancesTitle {
+  font-size: 12px;
+  position: absolute;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  text-shadow: 1px 1px black;
+  cursor: default;
+}
+#FinancesArea {
+  overflow: auto;
+  width: 100%;
+  height: calc(100% - 37px);
+  position: absolute;
+}
+#searchbar {
+  font-size: 15px;
+  outline: none;
+  width: 80%;
+  resize: none;
+  cursor: text;
+  background-color: grey;
+  border: 1px solid white;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+}
+#reload {
+  float: left;
+}
+
+#FinancesWindowresize-tleft {
+  cursor: nwse-resize;
+  top: 2px;
+}
+
+#FinancesWindowresize-tright {
+  cursor: nesw-resize;
+  top: 2px;
+  right: 0;
+}
+
+#FinancesWindowresize-bleft {
+  bottom: -4px;
+  cursor: nesw-resize;
+}
+
+#FinancesWindowresize-bright {
+  cursor: nwse-resize;
+  bottom: -4px;
+  right: 0;
+}
+
+#left {
+  float: left;
+  height: 100%;
+  width: 70%;
+  border-right: 2px solid gray;
+  text-align: center;
+}
+
+#right {
+  float: right;
+  height: 100%;
+  width: 29.5%;
+  text-align: center;
+}
