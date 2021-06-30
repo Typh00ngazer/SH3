@@ -2,16 +2,10 @@
 
 session_start();
 
-// if(isset($_SESSION['id']) ){
-// 	header("Location: /");
-// }
-
 require 'db.php';
 
 $name = $_SESSION['username'];
 $command = $_POST['command'];
-// $echo = ['command' => $command, 'test' => $test];
-// echo json_encode($echo);
 
 if (strpos($command, 'connect') === 0 && preg_match('~[0-9]+~', $command)) {
     if ($conn->connect_error) {die("Connection failed: " . $conn->connect_error);}
@@ -513,11 +507,41 @@ if (strpos($command, 'connect') === 0 && preg_match('~[0-9]+~', $command)) {
     if ($AmountAfter < 0) {
         $echo = ['command' => 'buy', 'success' => 'no', 'name' => $Name, 'amount' => $reAmount];
     } else {
-        $query1= "UPDATE market SET Amount = '$AmountAfter' WHERE `Name` = '$Name'";
-        if (mysqli_query($conn, $query1)) {
-            $error = "None";
+        $sql = "SELECT id FROM users WHERE username='$name'";
+        $query = $conn->query($sql);
+
+        while($result = $query->fetch_assoc()){
+            $myID = $result['id'];
+        }
+
+        $sql = "UPDATE market SET Amount = '$AmountAfter' WHERE `Name` = '$Name'";
+        if (mysqli_query($conn, $sql)) {
+            $sql = "SELECT id,`name`,amount FROM inventory WHERE `name` ='$Name'";
+            $query = $conn->query($sql);
+            while($result = $query->fetch_assoc()){
+                $invID = $result['id'];
+                $invName = $result['name'];
+                $invAmount = $result['amount'];
+            }
+
+            if(isset($invID)) {
+                $total = $invAmount + $reAmount;
+                $sql = "UPDATE inventory SET amount = '$total' WHERE `name` = '$Name' AND `location` = '$myID'";
+                if (mysqli_query($conn, $sql)) {
+                    $error = "None";
+                } else {
+                    $error = "SQL Error: " . $sql . "<br>" . mysqli_error($conn);
+                }
+            } else {
+                $sql = "INSERT INTO `inventory`(`id`, `name`, `amount`, `location`) VALUES (DEFAULT,'$Name','$reAmount','$myID')";
+                if (mysqli_query($conn, $sql)) {
+                    $error = "None";
+                } else {
+                    $error = "SQL Error: " . $sql . "<br>" . mysqli_error($conn);
+                }
+            }
         } else {
-            $error = "SQL Error: " . $query1 . "<br>" . mysqli_error($conn);
+            $error = "SQL Error: " . $sql . "<br>" . mysqli_error($conn);
         }
         $echo = ['command' => 'buy', 'error' => $error, 'success' => 'yes', 'name' => $Name, 'amount' => $reAmount];
     }
