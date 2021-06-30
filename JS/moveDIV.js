@@ -3,21 +3,16 @@ player = document.getElementById("audio-player-cont");
 logs = document.getElementById("LogsWindow");
 chat = document.getElementById("ChatWindow");
 browser = document.getElementById("BrowserWindow");
+finances = document.getElementById("FinancesWindow");
+task = document.getElementById("TaskWindow");
+npc = document.getElementById("NPCWindow");
 
 let wIndexArray = localStorage.getItem('wIndexArray');
-wIndexArray = wIndexArray.split(',');
-for(var i = 0; i < wIndexArray.length; i++) {
-  if (wIndexArray[i] === 'player') {
-    player.style.zIndex = i+1;
-  } else if (wIndexArray[i] === 'logs') {
-    logs.style.zIndex = i+1;
-  } else if (wIndexArray[i] === 'browser') {
-    browser.style.zIndex = i+1;
-  } else if (wIndexArray[i] === 'terminal') {
-    terminal.style.zIndex = i+1;
-  } else if (wIndexArray[i] === 'chat') {
-    chat.style.zIndex = i+1;
-  }
+if (wIndexArray !== null) {
+  wIndexArray = wIndexArray.split(',');
+} else {
+  wIndexArray = ['player', 'chat', 'browser', 'logs', 'terminal',];
+  localStorage.setItem('wIndexArray', wIndexArray);
 }
 
 window.onload = function() {
@@ -28,70 +23,51 @@ window.onload = function() {
   }
   logsRequest('php/logs.php', "0,"+currentIP);
   document.getElementById("termarea").value = "";
-  let termx = localStorage.getItem('termx');
-  let termy = localStorage.getItem('termy');
-  let termw = localStorage.getItem('termw');
-  let termh = localStorage.getItem('termh');
-  let Tactive = localStorage.getItem('Tactive');
-  let logx = localStorage.getItem('logx');
-  let logy = localStorage.getItem('logy');
-  let logw = localStorage.getItem('logw');
-  let logh = localStorage.getItem('logh');
-  let Lactive = localStorage.getItem('Lactive');
-  let chatx = localStorage.getItem('chatx');
-  let chaty = localStorage.getItem('chaty');
-  let chatw = localStorage.getItem('chatw');
-  let chath = localStorage.getItem('chath');
-  let Cactive = localStorage.getItem('Cactive');
-  let browserx = localStorage.getItem('browserx');
-  let browsery = localStorage.getItem('browsery');
-  let browserw = localStorage.getItem('browserw');
-  let browserh = localStorage.getItem('browserh');
-  let Pactive = localStorage.getItem('Pactive');
-  let musicx = localStorage.getItem('musicx');
-  let musicy = localStorage.getItem('musicy');
-  let Mactive = localStorage.getItem('Mactive');
-  terminal.style.position = "absolute";
-  terminal.style.left = termx+'px';
-  terminal.style.top = termy+'px';
-  terminal.style.width = termw+'px';
-  terminal.style.height = termh+'px';
-  logs.style.position = "absolute";
-  logs.style.left = logx+'px';
-  logs.style.top = logy+'px';
-  logs.style.width = logw+'px';
-  logs.style.height = logh+'px';
-  chat.style.position = "absolute";
-  chat.style.left = chatx+'px';
-  chat.style.top = chaty+'px';
-  chat.style.width = chatw+'px';
-  chat.style.height = chath+'px';
-  browser.style.position = "absolute";
-  browser.style.left = browserx+'px';
-  browser.style.top = browsery+'px';
-  browser.style.width = browserw+'px';
-  browser.style.height = browserh+'px';
-  player.style.position = "absolute";
-  player.style.left = musicx+'px';
-  player.style.top = musicy+'px';
-  if (Tactive === 'closed') {terminal.style.display = "none";}
-  if (Lactive === 'closed') {logs.style.display = "none";}
-  if (Cactive === 'closed') {chat.style.display = "none";}
-  if (Pactive === 'closed') {browser.style.display = "none";}
-  if (Mactive === 'closed') {player.style.display = "none";}
-  windows = ['terminal', 'player', 'logs', 'chat', 'browser'];
-  for (i = 0; i < windows.length; i++) {
-    if (windows[i] === 'terminal') {
-      elmnt = terminal;
-    } else if (windows[i] === 'player') {
-      elmnt = player;
-    } else if (windows[i] === 'logs') {
-      elmnt = logs;
-    } else if (windows[i] === 'chat') {
-      elmnt = chat;
-    } else if (windows[i] === 'browser') {
-      elmnt = browser;
+
+  for(var i = 0; i < wIndexArray.length; i++) {
+    if (wIndexArray[i] === 'player') {
+      player.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'logs') {
+      logs.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'browser') {
+      browser.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'terminal') {
+      terminal.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'chat') {
+      chat.style.zIndex = i+1;
     }
+  }
+
+  ajustW = ['TermWindow', 'LogsWindow', 'ChatWindow','BrowserWindow', 'audio-player-cont']
+  for(var i = 0; i < ajustW.length; i++) {
+    elmnt = document.getElementById(ajustW[i]);
+    storage = localStorage.getItem(ajustW[i]);
+    if (storage !== null) {
+      storage = storage.split(',');
+    } else {
+      storage = [500, 500, 500, 500];
+      localStorage.setItem(ajustW[i], storage);
+    }
+
+    if (ajustW[i] === 'TermWindow' || ajustW[i] === 'LogsWindow' || ajustW[i] === 'ChatWindow' || ajustW[i] === 'BrowserWindow' || ajustW[i] === 'audio-player-cont' || ajustW[i] === 'FinancesWindow' || ajustW[i] === 'TaskWindow' || ajustW[i] === 'NPCWindow') {
+
+      elmnt.style.position = "absolute";
+      elmnt.style.left = storage[0]+'px';
+      elmnt.style.top = storage[1]+'px';
+      elmnt.style.width = storage[2]+'px';
+      elmnt.style.height = storage[3]+'px';
+
+    } else if (ajustW[i] === 'audio-player-cont') {
+
+      elmnt.style.position = "absolute";
+      elmnt.style.left = '310px';
+      elmnt.style.top = '135px';
+
+    }
+
+    active = localStorage.getItem(ajustW[i]+"Active");
+    if (active === 'closed') {elmnt.style.display = "none";}
+
     if (elmnt.offsetWidth > document.documentElement.clientWidth) {elmnt.style.width = document.documentElement.clientWidth+'px';}
     if (elmnt.offsetHeight > document.documentElement.clientHeight - 50) {elmnt.style.height = document.documentElement.clientHeight - 50+'px';}
     if (elmnt.offsetTop < 0) {elmnt.style.top = "0px";}
@@ -109,43 +85,14 @@ function popup() {
   }
 }
 
-function OpenCloseTerm() {
-  if (terminal.style.display === "none") {
-    terminal.style.display = "block";
-    localStorage.setItem('Tactive', 'opened');
+function OpenClose(id) {
+  elmnt = document.getElementById(id);
+  if (elmnt.style.display === "none") {
+    elmnt.style.display = "block";
+    localStorage.setItem(id+'Active', 'opened');
   } else {
-    terminal.style.display = "none";
-    localStorage.setItem('Tactive', 'closed');
-  }
-}
-
-function OpenCloseLogs() {
-  if (logs.style.display === "none") {
-    logs.style.display = "block";
-    localStorage.setItem('Lactive', 'opened');
-  } else {
-    logs.style.display = "none";
-    localStorage.setItem('Lactive', 'closed');
-  }
-}
-
-function OpenCloseChat() {
-  if (chat.style.display === "none") {
-    chat.style.display = "block";
-    localStorage.setItem('Cactive', 'opened');
-  } else {
-    chat.style.display = "none";
-    localStorage.setItem('Cactive', 'closed');
-  }
-}
-
-function OpenCloseBrowser() {
-  if (browser.style.display === "none") {
-    browser.style.display = "block";
-    localStorage.setItem('Pactive', 'opened');
-  } else {
-    browser.style.display = "none";
-    localStorage.setItem('Pactive', 'closed');
+    elmnt.style.display = "none";
+    localStorage.setItem(id+'Active', 'closed');
   }
 }
 
@@ -153,6 +100,9 @@ resizeElemnt(terminal);
 resizeElemnt(logs);
 resizeElemnt(chat);
 resizeElemnt(browser);
+resizeElemnt(finances);
+resizeElemnt(task);
+resizeElemnt(npc);
 
 function resizeElemnt(element) {
   const minimum_size = 300;
@@ -233,6 +183,9 @@ dragElement(logs);
 dragElement(chat);
 dragElement(browser);
 dragElement(player);
+dragElement(finances);
+dragElement(task);
+dragElement(npc);
     
 function dragElement(elmnt) {
   var pos1 = 0, pos2 = 0;
@@ -263,30 +216,11 @@ function dragElement(elmnt) {
   }
   
   function closeDragElement() {
-    Arr1 = [elmnt.offsetLeft, elmnt.offsetTop, elmnt.offsetWidth, elmnt.offsetHeight];
-    if (elmnt.id === "TermWindow") {
-      termArr = ['termx', 'termy', 'termw', 'termh'];
-      for (i = 0; i < termArr.length; i++) {
-        localStorage.setItem(termArr[i], Arr1[i]);
-      }
-    } else if (elmnt.id === "audio-player-cont") {
-      localStorage.setItem('musicx', elmnt.offsetLeft);
-      localStorage.setItem('musicy', elmnt.offsetTop);
-    } else if (elmnt.id === "LogsWindow") {
-      logArr = ['logx', 'logy', 'logw', 'logh'];
-      for (i = 0; i < logArr.length; i++) {
-        localStorage.setItem(logArr[i], Arr1[i]);
-      }
-    } else if (elmnt.id === "ChatWindow") {
-      chatArr = ['chatx', 'chaty', 'chatw', 'chath'];
-      for (i = 0; i < chatArr.length; i++) {
-        localStorage.setItem(chatArr[i], Arr1[i]);
-      }
-    } else if (elmnt.id === "BrowserWindow") {
-      browserArr = ['browserx', 'browsery', 'browserw', 'browserh'];
-      for (i = 0; i < browserArr.length; i++) {
-        localStorage.setItem(browserArr[i], Arr1[i]);
-      }
+    Arr = [elmnt.offsetLeft, elmnt.offsetTop, elmnt.offsetWidth, elmnt.offsetHeight];
+    if (elmnt.id === "audio-player-cont") {
+      localStorage.setItem('audio-player-cont', Arr[0] + "," + Arr[1]);
+    } else {
+      localStorage.setItem(elmnt.id, Arr);
     }
     document.onmouseup = null;
     document.onmousemove = null;
