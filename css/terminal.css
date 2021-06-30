@@ -1,0 +1,175 @@
+body {
+  background-color: black;
+  overflow:hidden;
+}
+#TermWindow {
+  position: absolute;
+  z-index: 1;
+  background: black;
+  border: 1px solid white;
+  min-height: 300px;
+  min-width: 300px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+#TermWindowheader {
+  border: 1px solid white;
+  padding: 10px;
+  height: 15px;
+  background-color: grey;
+  color: #fff;;
+}
+#Title, #TermTitle {
+  font-size: 12px;
+  position: absolute;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  text-shadow: 1px 1px black;
+  cursor: default;
+}
+#buttons {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 5px;
+  cursor: pointer;
+}
+#terminal {
+  overflow: auto;
+  width: calc(100% - 5px);
+  height: calc(100% - 38px);
+  position: absolute;
+  color:#00ff00;
+  cursor: default;
+  padding-left: 5px;
+  padding-top: 5px;
+}
+th{
+  text-align: left;
+  font-weight: normal;
+  font-size: 12px;
+}
+#command-input {
+  padding-bottom: 10px;
+}
+#file-output {
+  font-size: 12px;
+  padding: 1px;
+}
+#termarea, #send-message {
+  font-size: 15px;
+  outline: none;
+  height: 17px;
+  width: 78%;
+  resize: none;
+  cursor: text;
+  caret-color: #00ff00;
+  color:#00ff00;
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+}
+nav {
+  height:50px;
+  left: -1px;
+  background-color: gray;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 500;
+}
+.dropbtn {
+  padding: 3px;
+  cursor: pointer;
+}
+#dropdown-content {
+  z-index: 500;
+  display: none;
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  width: 80px;
+  z-index: 1;
+}
+#dropdown-content a {
+  color: white;
+  background: grey;
+  padding: 12px 16px;
+  width: 80px;
+  text-decoration: none;
+  text-align: center;
+  display:inline-block;
+}
+#dropdown-content a:hover {
+  background-color: #282828;
+  transition-duration: 500ms;
+}
+
+.resize {
+  cursor: pointer;
+  z-index: 2;
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  /* border: 1px solid white; */
+}
+
+#TermWindowresize-tleft, #LogsWindowresize-tleft, #ChatWindowresize-tleft, #BrowserWindowresize-tleft {
+  cursor: nwse-resize;
+  top: 2px;
+}
+
+#TermWindowresize-tright, #LogsWindowresize-tright, #ChatWindowresize-tright, #BrowserWindowresize-tright {
+  cursor: nesw-resize;
+  top: 2px;
+  right: 0;
+}
+
+#TermWindowresize-bleft, #LogsWindowresize-bleft, #ChatWindowresize-bleft, #BrowserWindowresize-bleft {
+  bottom: -4px;
+  cursor: nesw-resize;
+}
+
+#TermWindowresize-bright, #LogsWindowresize-bright, #ChatWindowresize-bright, #BrowserWindowresize-bright {
+  cursor: nwse-resize;
+  bottom: -4px;
+  right: 0;
+}
+#notify {
+  width: 250px;
+  height: 100%;
+  float: right;
+}
+.alert {
+  list-style: none;
+  padding: 20px;
+  background-color: #f44336;
+  color: white;
+  opacity: 1;
+  transition: opacity 0.6s;
+  margin-bottom: 15px;
+}
+
+.alert.success {background-color: #4CAF50;}
+.alert.infor {background-color: #2196F3;}
+.alert.warning {background-color: #ff9800;}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closebtn:hover {
+  color: black;
+}
+
+#myProgress {
+  width: 100%;
+  background-color: #ddd;
+}
