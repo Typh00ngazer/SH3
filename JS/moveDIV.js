@@ -282,6 +282,11 @@ function dragElement(elmnt) {
       for (i = 0; i < chatArr.length; i++) {
         localStorage.setItem(chatArr[i], Arr1[i]);
       }
+    } else if (elmnt.id === "BrowserWindow") {
+      browserArr = ['browserx', 'browsery', 'browserw', 'browserh'];
+      for (i = 0; i < browserArr.length; i++) {
+        localStorage.setItem(browserArr[i], Arr1[i]);
+      }
     }
     document.onmouseup = null;
     document.onmousemove = null;
