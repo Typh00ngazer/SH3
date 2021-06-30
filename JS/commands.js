@@ -179,7 +179,8 @@ function notify(lifespan, type, message) {
 }
 
 function reload() {
-  if(document.getif(document.getElementById('MarketSell'))) {
+  if(document.getElementById('MarketSell')) {
+    BrowserArea.innerHTML = "<style> #BrowserArea {background-color: black;} </style><textarea id='searchbar' style='overflow: hidden;' spellcheck='false' rows='1' onkeypress='search(event, this)' wrap='off'></textarea>"
     makeRequest('php/commands.php', "blackmarket");
   } else {
     BrowserArea.innerHTML = "<style> #BrowserArea {background-color: black;} </style><textarea id='searchbar' style='overflow: hidden;' spellcheck='false' rows='1' onkeypress='search(event, this)' wrap='off'></textarea>"
@@ -212,4 +213,33 @@ function buy(e, buy) {
     }
   }
   buy = "";
+}
+
+function Click2View(click) {
+  click.innerHTML = "284521786";
+}
+
+function BTC(option) {
+  if (option == "redeem") {
+    document.getElementById("OptionArea").innerHTML = "<form onsubmit='redeem(input.value);return false;'>"
+		+ "<input id='input' style='width: 90%'' type='text' placeholder='Enter a BTC Packet'>"
+    + "<input type='submit' style='width: 95%' value='Consume Packet'></form>"
+
+  } else if (option == "create") {
+    document.getElementById("OptionArea").innerHTML = "<form onsubmit='create(coinputde.value);return false;'>"
+		+ "<input id='input' style='width: 90%' type='text' placeholder='How much BTC?'>"
+    + "<input type='submit' style='width: 95%' value='Create Packet'></form>"
+  } else if (option == "buy") {
+    document.getElementById("OptionArea").innerHTML = "<form onsubmit='BTCBuy(input.value);return false;'>"
+		+ "<input id='input' style='width: 90%' type='text' placeholder='How much BTC?'>"
+    + "<input type='submit' style='width: 95%' value='Buy BTC'></form>"
+  } else if (option == "sell") {
+    document.getElementById("OptionArea").innerHTML = "<form onsubmit='BTCSell(input.value);return false;'>"
+		+ "<input id='input' style='width: 90%' type='text' placeholder='How much BTC?'>"
+    + "<input type='submit' style='width: 95%' value='Sell BTC'></form>"
+  }
+}
+
+function redeem(code) {
+  console.log(code);
 }
