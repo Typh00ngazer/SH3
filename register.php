@@ -10,7 +10,7 @@ require 'php/db.php';
 
 $message = '';
 
-if(!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['name'])):
+if(!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['name'])) {
 
 	$username = $_POST['name'];
 	$email = $_POST['email'];
@@ -23,13 +23,27 @@ if(!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['name'
     VALUES (DEFAULT, '$username', '$email', '$password', '$date', '$randIP', Null)";
 	$exe = $conn->prepare($sql);
 
-	if($exe->execute() ):
-		$message = 'Successfully created new user';
-	else:
-		$message = 'Sorry there must have been an issue creating your account';
-	endif;
+	if($exe->execute() ) {
+		$sql = "SELECT id FROM users WHERE email = '$email'";
+		$query = $conn->query($sql);
 
-endif;
+		while($result = $query->fetch_assoc()){
+			$myID = $result['id'];
+		}
+
+		$sql = "INSERT INTO filesystem (id, creator, `name`, `type`, `level`, size, `location`) 
+		VALUES (DEFAULT, '0', 'firewall', 'firewall', '1', '1', '$myID');";
+		$sql .= "INSERT INTO filesystem (id, creator, `name`, `type`, `level`, size, `location`) 
+		VALUES (DEFAULT, '0', 'waterwall', 'waterwall', '1', '1', '$myID');";
+		if (mysqli_multi_query($conn, $sql)) {
+			$message = 'Successfully created new user';
+    	} else {
+			$message = 'Successfully failed to create a new user';
+		}
+	} else {
+		$message = 'Sorry there must have been an issue creating your account';
+	}
+}
 
 ?>
 
