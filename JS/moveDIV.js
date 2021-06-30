@@ -4,6 +4,21 @@ logs = document.getElementById("LogsWindow");
 chat = document.getElementById("ChatWindow");
 browser = document.getElementById("BrowserWindow");
 
+let wIndexArray = localStorage.getItem('wIndexArray');
+wIndexArray = wIndexArray.split(',');
+for(var i = 0; i < wIndexArray.length; i++) {
+  if (wIndexArray[i] === 'player') {
+    player.style.zIndex = i+1;
+  } else if (wIndexArray[i] === 'logs') {
+    logs.style.zIndex = i+1;
+  } else if (wIndexArray[i] === 'browser') {
+    browser.style.zIndex = i+1;
+  } else if (wIndexArray[i] === 'terminal') {
+    terminal.style.zIndex = i+1;
+  } else if (wIndexArray[i] === 'chat') {
+    chat.style.zIndex = i+1;
+  }
+}
 
 window.onload = function() {
   if (window.XMLHttpRequest) { // Mozilla, Safari, IE7+ ...
@@ -274,31 +289,98 @@ function dragElement(elmnt) {
 }
 
 terminal.addEventListener('mousedown', e => {
-  terminal.style.zIndex = "10";
-  player.style.zIndex = "1";
-  logs.style.zIndex = "1";
-  browser.style.zIndex = "1";
+  wIndexArray = wIndexArray.filter(e => e !== 'terminal');
+  wIndexArray.push('terminal');
+  localStorage.setItem('wIndexArray', wIndexArray);
+  for(var i = 0; i < wIndexArray.length; i++) {
+    if (wIndexArray[i] === 'player') {
+      player.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'logs') {
+      logs.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'chat') {
+      chat.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'browser') {
+      browser.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'terminal') {
+      terminal.style.zIndex = i+1;
+    }
+  }
 });
 
 player.addEventListener('mousedown', e => {
-  player.style.zIndex = "10";
-  terminal.style.zIndex = "1";
-  logs.style.zIndex = "1";
-  browser.style.zIndex = "1";
+  wIndexArray = wIndexArray.filter(e => e !== 'player');
+  wIndexArray.push('player');
+  localStorage.setItem('wIndexArray', wIndexArray);
+  for(var i = 0; i < wIndexArray.length; i++) {
+    if (wIndexArray[i] === 'player') {
+      player.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'logs') {
+      logs.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'chat') {
+      chat.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'browser') {
+      browser.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'terminal') {
+      terminal.style.zIndex = i+1;
+    }
+  }
 });
 
 logs.addEventListener('mousedown', e => {
-  logs.style.zIndex = "10";
-  terminal.style.zIndex = "1";
-  player.style.zIndex = "1";
-  browser.style.zIndex = "1";
+  wIndexArray = wIndexArray.filter(e => e !== 'logs');
+  wIndexArray.push('logs');
+  localStorage.setItem('wIndexArray', wIndexArray);
+  for(var i = 0; i < wIndexArray.length; i++) {
+    if (wIndexArray[i] === 'player') {
+      player.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'logs') {
+      logs.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'chat') {
+      chat.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'browser') {
+      browser.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'terminal') {
+      terminal.style.zIndex = i+1;
+    }
+  }
 });
 
 browser.addEventListener('mousedown', e => {
-  browser.style.zIndex = "10";
-  logs.style.zIndex = "1";
-  terminal.style.zIndex = "1";
-  player.style.zIndex = "1";
+  wIndexArray = wIndexArray.filter(e => e !== 'browser');
+  wIndexArray.push('browser');
+  localStorage.setItem('wIndexArray', wIndexArray);
+  for(var i = 0; i < wIndexArray.length; i++) {
+    if (wIndexArray[i] === 'player') {
+      player.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'logs') {
+      logs.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'chat') {
+      chat.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'browser') {
+      browser.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'terminal') {
+      terminal.style.zIndex = i+1;
+    }
+  }
+});
+
+chat.addEventListener('mousedown', e => {
+  wIndexArray = wIndexArray.filter(e => e !== 'chat');
+  wIndexArray.push('chat');
+  localStorage.setItem('wIndexArray', wIndexArray);
+  for(var i = 0; i < wIndexArray.length; i++) {
+    if (wIndexArray[i] === 'player') {
+      player.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'logs') {
+      logs.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'chat') {
+      chat.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'browser') {
+      browser.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'terminal') {
+      terminal.style.zIndex = i+1;
+    }
+  }
 });
 
 function TextBox() {
