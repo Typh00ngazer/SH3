@@ -3,7 +3,7 @@
 session_start();
 
 if(isset($_SESSION['id']) ){
-	header("Location: WebTerminal.php");
+	header("Location: /");
 }
 
 require 'php/db.php';
