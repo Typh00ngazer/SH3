@@ -22,6 +22,8 @@ if(isset($_SESSION['id']) ){
 		header("Location: http://localhost:3000/logout.php");
 	}
 
+} else {
+  header("Location: http://localhost:3000/logout.php");
 }
 ?>
 <!DOCTYPE html>
@@ -32,6 +34,9 @@ if(isset($_SESSION['id']) ){
   <link href="css/logs.css" rel="stylesheet" type="text/css">
   <link href="css/chat.css" rel="stylesheet" type="text/css">
   <link href="css/browser.css" rel="stylesheet" type="text/css">
+  <link href="css/finances.css" rel="stylesheet" type="text/css">
+  <link href="css/task.css" rel="stylesheet" type="text/css">
+  <link href="css/npc.css" rel="stylesheet" type="text/css">
   <title>SH3?</title>
 </head>
 <body>
@@ -42,7 +47,7 @@ if(isset($_SESSION['id']) ){
         <b>MusicPlayer</b>
       </div>
       <div id="buttons">
-        <img src="Pictures/close.png" width="15px" onclick="OpenCloseMusic();">
+        <img src="Pictures/close.png" width="15px" onclick="OpenClose('audio-player-cont');">
       </div>
     </div>
     <div class="player">
@@ -77,7 +82,7 @@ if(isset($_SESSION['id']) ){
         header.innerHTML = "<b>WebTerminal - " + currentIP + "</b>";
       </script>
       <div id="buttons">
-        <img src="Pictures/close.png" width="15px" onclick="OpenCloseTerm();">
+        <img src="Pictures/close.png" width="15px" onclick="OpenClose('TermWindow');">
       </div>
     </div>
     <div id='terminal' onclick="TextBox();">
@@ -97,7 +102,7 @@ if(isset($_SESSION['id']) ){
       <div id="LogsTitle"><b>Logs - Local</b></div>
       <div id="buttons">
         <div id="switch" onclick="switchTo();">Switch to Remote</div>
-        <img src="Pictures/close.png" id='close' width="15px" onclick="OpenCloseLogs();">
+        <img src="Pictures/close.png" id='close' width="15px" onclick="OpenClose('LogsWindow');">
       </div>
     </div>
     <div id="logs-remote" class='logs' style="display:none;"></div>
@@ -111,7 +116,7 @@ if(isset($_SESSION['id']) ){
     <div id="ChatWindowheader">
       <div id="ChatTitle"><b>Chat</b></div>
       <div id="buttons">
-        <img src="Pictures/close.png" width="15px" onclick="OpenCloseChat();">
+        <img src="Pictures/close.png" width="15px" onclick="OpenClose('ChatWindow');">
       </div>
     </div>
     <div id="user-messages"></div>
@@ -127,10 +132,58 @@ if(isset($_SESSION['id']) ){
       <div id="BrowserTitle"><b>Browser</b></div>
       <div id="buttons">
         <img src="Pictures/reload.png" id="reload" width="15px" onclick="reload();">
-        <img src="Pictures/close.png" id='close' width="15px" onclick="OpenCloseBrowser();">
+        <img src="Pictures/close.png" id='close' width="15px" onclick="OpenClose('BrowserWindow');">
       </div>
     </div>
     <div id="BrowserArea">
+      <textarea id="searchbar" style="overflow: hidden;" spellcheck="false" wrap="off" rows="1" onkeypress="search(event, this)"></textarea>
+    </div>
+  </div>
+  <div id="FinancesWindow" class="resizeable">
+    <div id="FinancesWindowresize-tleft" class="resize"></div>
+    <div id="FinancesWindowresize-tright" class="resize"></div>
+    <div id="FinancesWindowresize-bleft" class="resize"></div>
+    <div id="FinancesWindowresize-bright" class="resize"></div>
+    <div id="FinancesWindowheader">
+      <div id="FinancesTitle"><b>Finances</b></div>
+      <div id="buttons">
+        <img src="Pictures/reload.png" id="reload" width="15px" onclick="reload();">
+        <img src="Pictures/close.png" id='close' width="15px" onclick="OpenClose('FinancesWindow');">
+      </div>
+    </div>
+    <div id="FinancesArea">
+      <textarea id="searchbar" style="overflow: hidden;" spellcheck="false" wrap="off" rows="1" onkeypress="search(event, this)"></textarea>
+    </div>
+  </div>
+  <div id="NPCWindow" class="resizeable">
+    <div id="NPCWindowresize-tleft" class="resize"></div>
+    <div id="NPCWindowresize-tright" class="resize"></div>
+    <div id="NPCWindowresize-bleft" class="resize"></div>
+    <div id="NPCWindowresize-bright" class="resize"></div>
+    <div id="NPCWindowheader">
+      <div id="NPCTitle"><b>NPC</b></div>
+      <div id="buttons">
+        <img src="Pictures/reload.png" id="reload" width="15px" onclick="reload();">
+        <img src="Pictures/close.png" id='close' width="15px" onclick="OpenClose('NPCWindow');">
+      </div>
+    </div>
+    <div id="NPCArea">
+      <textarea id="searchbar" style="overflow: hidden;" spellcheck="false" wrap="off" rows="1" onkeypress="search(event, this)"></textarea>
+    </div>
+  </div>
+  <div id="TaskWindow" class="resizeable">
+    <div id="TaskWindowresize-tleft" class="resize"></div>
+    <div id="TaskWindowresize-tright" class="resize"></div>
+    <div id="TaskWindowresize-bleft" class="resize"></div>
+    <div id="TaskWindowresize-bright" class="resize"></div>
+    <div id="TaskWindowheader">
+      <div id="TaskTitle"><b>Task</b></div>
+      <div id="buttons">
+        <img src="Pictures/reload.png" id="reload" width="15px" onclick="reload();">
+        <img src="Pictures/close.png" id='close' width="15px" onclick="OpenClose('TaskWindow');">
+      </div>
+    </div>
+    <div id="TaskArea">
       <textarea id="searchbar" style="overflow: hidden;" spellcheck="false" wrap="off" rows="1" onkeypress="search(event, this)"></textarea>
     </div>
   </div>
@@ -139,11 +192,11 @@ if(isset($_SESSION['id']) ){
 		<nav>
       <div class="windows">
         <img class="dropbtn" src="Pictures/menu.png" width="45px" onclick="popup()">
-        <img class="dropbtn" src="Pictures/terminal.png" width="45px" onclick="OpenCloseTerm()">
-        <img class="dropbtn" src="Pictures/music.png" width="45px" onclick="OpenCloseMusic()">
-        <img class="dropbtn" src="Pictures/log.png" width="45px" onclick="OpenCloseLogs()">
-        <img class="dropbtn" src="Pictures/chat.png" width="45px" onclick="OpenCloseChat()">
-        <img class="dropbtn" src="Pictures/browser.png" width="45px" onclick="OpenCloseBrowser()">
+        <img class="dropbtn" src="Pictures/terminal.png" width="45px" onclick="OpenClose('TermWindow')">
+        <img class="dropbtn" src="Pictures/music.png" width="45px" onclick="OpenClose('audio-player-cont')">
+        <img class="dropbtn" src="Pictures/log.png" width="45px" onclick="OpenClose('LogsWindow')">
+        <img class="dropbtn" src="Pictures/chat.png" width="45px" onclick="OpenClose('ChatWindow')">
+        <img class="dropbtn" src="Pictures/browser.png" width="45px" onclick="OpenClose('BrowserWindow')">
       </div>
       <div id="dropdown-content">
         <a style="cursor: pointer;" onclick="resetIP()">Reset IP</a>
