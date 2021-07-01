@@ -23,6 +23,9 @@ window.onload = function() {
   }
   logsRequest('php/logs.php', "0,"+currentIP);
   document.getElementById("termarea").value = "";
+  
+  Finances();
+  ListPlayers();
 
   for(var i = 0; i < wIndexArray.length; i++) {
     if (wIndexArray[i] === 'player') {
