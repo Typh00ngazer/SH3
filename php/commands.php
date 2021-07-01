@@ -5,7 +5,10 @@ session_start();
 require 'db.php';
 
 $name = $_SESSION['username'];
+$myID = $_SESSION['id'];
 $command = $_POST['command'];
+// $echo = ['command' => $command, 'test' => $test];
+// echo json_encode($echo);
 
 if (strpos($command, 'connect') === 0 && preg_match('~[0-9]+~', $command)) {
     if ($conn->connect_error) {die("Connection failed: " . $conn->connect_error);}
@@ -71,11 +74,10 @@ if (strpos($command, 'connect') === 0 && preg_match('~[0-9]+~', $command)) {
 
 } else if (strpos($command, 'ls') === 0) {
     if ($conn->connect_error) {die("Connection failed: " . $conn->connect_error);}
-    $sql1= "SELECT id,ConnTo FROM users WHERE username = '$name'";
+    $sql1= "SELECT ConnTo FROM users WHERE username = '$name'";
     $query = $conn->query($sql1);
     while($result = $query->fetch_assoc()){
         $command = $result['ConnTo'];
-        $myID = $result['id'];
     }
     if (preg_match('~[0-9]+~', $command)) {
         $sql1= "SELECT id FROM users WHERE ip = '$command'";
@@ -411,15 +413,15 @@ if (strpos($command, 'connect') === 0 && preg_match('~[0-9]+~', $command)) {
         echo json_encode($echo);
     }
 } else if (strpos($command, 'gen npc') === 0) {
-    $NpcName = 'NPC_' . trim(str_replace('gen npc', '', $command));
-    if (str_replace('NPC_', '', $NpcName) != "") {
+    $NpcName = trim(str_replace('gen npc', '', $command));
+    if ($NpcName != "") {
         $randIP = mt_rand(0, 255) . "." . mt_rand(0, 255) . "." . mt_rand(0, 255) . "." . mt_rand(0, 255);
         $date = date("y-m-d H:m:s");
         $currentIP = $randIP;
-        $query = "INSERT INTO users (id, username, ActivationDate, ip) 
-        VALUES (DEFAULT, '$NpcName', '$date', '$randIP');";
-        $query .= "INSERT INTO filesystem (id, username, firewall, waterwall, antivirus, malware) 
-        VALUES (DEFAULT, '$NpcName', '1', '1', '0', '0')";
+        $query = "INSERT INTO NPC (id, `Name`, IP, CPU) 
+        VALUES (DEFAULT, '$NpcName', '$randIP', '500');";
+        $query .= "INSERT INTO filesystem (id, creator, `name`, `type`, `level`, `size`, `location`) 
+        VALUES (DEFAULT, '0', '$NpcName', 'firewall', 'firewall', '1', '1', '$NpcName')";
         if (mysqli_multi_query($conn, $query)) {
             $echo = ['command' => 'gen npc', 'npc' => "made npc successfully"];
             echo json_encode($echo);
@@ -545,6 +547,53 @@ if (strpos($command, 'connect') === 0 && preg_match('~[0-9]+~', $command)) {
         }
         $echo = ['command' => 'buy', 'error' => $error, 'success' => 'yes', 'name' => $Name, 'amount' => $reAmount];
     }
+    echo json_encode($echo);
+} else if (strpos($command, 'Finances') === 0) {
+    $sql = "SELECT `addr`,`amount`,`bankIP` FROM Finances WHERE `location` = '$myID'";
+    $query = $conn->query($sql);
+    $BankAccs = [];
+    while ($result = $query->fetch_assoc()){
+        array_push($BankAccs, $result['addr'], $result['amount'], $result['bankIP']);
+    }
+
+    if($BankAccs) {
+        //player has bank acc
+        $echo = ['command' => 'Finances', 'success' => 'yes', 'accounts' => $BankAccs];
+    } else {
+        //make a bank acc for them
+        $randAcc = mt_rand(0, 255000);
+        $sql = "INSERT INTO `Finances`(`id`, `addr`, `amount`, `bankIP`, `location`) VALUES (DEFAULT,'$randAcc','20000', '19.15.6.235', '$myID')";
+        if (mysqli_query($conn, $sql)) {
+            $sql = "SELECT `addr`,`amount`,`bankIP` FROM Finances WHERE `location` = '$myID'";
+            $query = $conn->query($sql);
+            while($result = $query->fetch_assoc()){
+                array_push($BankAccs, $result['addr'], $result['amount'], $result['bankIP']);
+            }
+            $echo = ['command' => 'Finances', 'success' => 'yes', 'accounts' => $BankAccs];
+        } else {
+            $error = "SQL Error: " . $sql . "<br>" . mysqli_error($conn);
+            $echo = ['command' => 'Finances', 'success' => 'no', 'error' => $error];
+        }
+    }
+    echo json_encode($echo);
+} else if (strpos($command, 'list') === 0) {
+    $sql = "SELECT * FROM NPC";
+    $query = $conn->query($sql);
+    $NPCs = [];
+    $Players = [];
+
+    while ($result = $query->fetch_assoc()){
+        array_push($NPCs, $result['Name'], $result['IP'], $result['CPU']);
+    }
+
+    $sql = "SELECT username,ip FROM users";
+    $query = $conn->query($sql);
+
+    while ($result = $query->fetch_assoc()){
+        array_push($Players, $result['username'], $result['ip']);
+    }
+
+    $echo = ['command' => 'list', 'npcs' => $NPCs, 'players' => $Players];
     echo json_encode($echo);
 }
 $conn->close();
