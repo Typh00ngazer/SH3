@@ -90,7 +90,7 @@ function alertContents() {
         for (i = 0; i < currentFiles.length; i++) {
           list += "<tr><td>" + currentFiles[i]['id'] + "</td><td>" + currentFiles[i]['name'] + "</td><td>v" + currentFiles[i]['level'] + "</td><td>" + currentFiles[i]['size'] + " GB</td><td>" + currentFiles[i]['type'] + "</td></tr>";
         }
-        console.log(commandOutput.innerHTML += "<table  width='100%'><tr><th>#</th><th>Name</th><th>Version</th><th>Size</th><th>Type</th></tr><div id='file-output'>" + list + "</div></table><br>");
+        //console.log(commandOutput.innerHTML += "<table  width='100%'><tr><th>#</th><th>Name</th><th>Version</th><th>Size</th><th>Type</th></tr><div id='file-output'>" + list + "</div></table><br>");
       } else if (response.command === "rm") {
         commandOutput.innerHTML += response.fileExist + "<br><br>";
       } else if (response.command === "ul") {
@@ -122,6 +122,73 @@ function alertContents() {
         var currentIP = response.currentIP;
         header = document.getElementById("TermTitle");
         header.innerHTML = "<b>WebTerminal - " + currentIP + "</b>";
+      } else if (response.command === "Finances") {
+        if (response.success === "yes") {
+          table = document.getElementById("accountTable");
+          moneyTotal = document.getElementById("moneyTotal");
+          table.innerHTML = "";
+          moneyTotal.innerHTML = 0;
+          var row0 = table.insertRow(0);
+          row0.insertCell(0).innerHTML = "<div style='text-align:center; font-weight:bold; font-size:100%;'>Account</div>";
+          row0.insertCell(1).innerHTML = "<div style='text-align:center; font-weight:bold; font-size:100%;'>Total</div>"; 
+          r = 1;
+          for (i = 0; i < response.accounts.length; i += 3) {
+            var row = table.insertRow(r);
+            addr = response.accounts[i];
+            amount = response.accounts[i+1];
+            bankIP = response.accounts[i+2];
+
+            row.insertCell(0).innerHTML = "<div style='padding-top:4px; color:red; cursor:pointer; font-size:80%;' onclick='Click2View(this, " + addr + ")'>[Click To View]</div><div style='color:yellow; padding-top:4px; font-size:80%;'><u>" + bankIP + "</u></div>";
+            row.insertCell(1).innerHTML = "<div style='color:green;'>$"+amount+"</div>";
+            r++
+
+            moneyTotal.innerHTML =  Number(moneyTotal.innerHTML) + Number(amount); 
+          }
+          moneyTotal.innerHTML = "$" + moneyTotal.innerHTML;
+        } else {
+          console.log("Failed to load: " + response.error);
+        }
+      } else if (response.command === "list") {
+        NPCs = document.getElementById("NPCList");
+        Players = document.getElementById("PlayerList");//cells [ icons | ip | name | cpu | notes ]
+        NPCs.innerHTML = "";
+        Players.innerHTML = "";
+        console.log(response.npcs[1]);
+
+        //cells [ icons | ip | name | cpu | notes ]
+        var tbl = document.createElement('table');
+        tbl.style.width = '100%';
+        var tbdy = document.createElement('tbody');
+        for (var i = 0; i < response.npcs.length; i += 3) {
+          var tr = document.createElement('tr');
+          for (var j = 0; j < 2; j++) {
+            if (i == 2 && j == 1) {
+              break
+            } else {
+              var cell = document.createElement('td');
+              var cellText = document.createTextNode()
+              cell.appendChild(cellText)
+              tr.appendChild(td)
+            }
+          }
+          tbdy.appendChild(tr);
+        }
+        tbl.appendChild(tbdy);
+        NPCs.appendChild(tbl)
+        // for (i = 0; i < response.npcs.length; i += 3) {
+        //   Name = response.npcs[i];
+        //   ip = response.npcs[i+1];
+        //   cpu = response.npcs[i+2];
+
+        //   NPCs.innerHTML += "<p style='color:gray;'><u style='color:orange;'>" + ip + "</u><br>" + Name + " - " + cpu + "MHz</p>";
+        // }
+        
+        for (i = 0; i < response.players.length; i += 3) {
+          Name = response.players[i];
+          ip = response.players[i+1];
+
+          Players.innerHTML += "<p>" + Name + "</p>";
+        }
       }
     } else {
       alert('There was a problem with the request.');
@@ -215,31 +282,35 @@ function buy(e, buy) {
   buy = "";
 }
 
-function Click2View(click) {
-  click.innerHTML = "284521786";
+function Click2View(self, addr) {
+  self.innerHTML = addr;
 }
 
 function BTC(option) {
   if (option == "redeem") {
     document.getElementById("OptionArea").innerHTML = "<form onsubmit='redeem(input.value);return false;'>"
-		+ "<input id='input' style='width: 90%'' type='text' placeholder='Enter a BTC Packet'>"
+	+ "<input id='input' style='width: 90%'' type='text' placeholder='Enter a BTC Packet'>"
     + "<input type='submit' style='width: 95%' value='Consume Packet'></form>"
 
   } else if (option == "create") {
     document.getElementById("OptionArea").innerHTML = "<form onsubmit='create(coinputde.value);return false;'>"
-		+ "<input id='input' style='width: 90%' type='text' placeholder='How much BTC?'>"
+	+ "<input id='input' style='width: 90%' type='text' placeholder='How much BTC?'>"
     + "<input type='submit' style='width: 95%' value='Create Packet'></form>"
   } else if (option == "buy") {
     document.getElementById("OptionArea").innerHTML = "<form onsubmit='BTCBuy(input.value);return false;'>"
-		+ "<input id='input' style='width: 90%' type='text' placeholder='How much BTC?'>"
+	+ "<input id='input' style='width: 90%' type='text' placeholder='How much BTC?'>"
     + "<input type='submit' style='width: 95%' value='Buy BTC'></form>"
   } else if (option == "sell") {
     document.getElementById("OptionArea").innerHTML = "<form onsubmit='BTCSell(input.value);return false;'>"
-		+ "<input id='input' style='width: 90%' type='text' placeholder='How much BTC?'>"
+	+ "<input id='input' style='width: 90%' type='text' placeholder='How much BTC?'>"
     + "<input type='submit' style='width: 95%' value='Sell BTC'></form>"
   }
 }
 
-function redeem(code) {
-  console.log(code);
+function Finances() {
+  makeRequest('php/commands.php', "Finances");
+}
+
+function ListPlayers() {
+  makeRequest('php/commands.php', "list");
 }
