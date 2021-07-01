@@ -147,7 +147,7 @@ if(isset($_SESSION['id']) ){
       <div id="FinancesWindowheader">
         <div id="FinancesTitle"><b>Finances</b></div>
         <div id="buttons">
-          <img src="Pictures/reload.png" id="reload" width="15px" onclick="reload();">
+          <img src="Pictures/reload.png" id="reload" width="15px" onclick="Finances()">
           <img src="Pictures/close.png" id='close' width="15px" onclick="OpenClose('FinancesWindow');">
         </div>
       </div>
@@ -155,26 +155,10 @@ if(isset($_SESSION['id']) ){
         <div id="left">
           <div id="USDTitle" style="color:white; padding-top:8px;">Bank Accounts</div>
           <div id="moneyTotal" style="color:green; padding-top:4px; font-size:75%;">$69,420.00</div>
-          <table  width='100%' style="color:white; padding-top:16px;">
+          <table  id="accountTable" width='100%' style="color:white; padding-top:16px;">
             <tr>
               <th style="text-align:center; font-weight:bold; font-size:100%;">Account</th>
               <th style="text-align:center; font-weight:bold; font-size:100%;">Total</th>
-            </tr>
-            <td>
-              <div style="padding-top:4px; color:red; cursor:pointer; font-size:80%;" onclick="Click2View(this)">[Click To View]</div>
-              <div style="color:yellow; padding-top:4px; font-size:80%;"><u>255.255.255.255</u></div></td><td style="color:green;">$69,420.00
-            </td>
-            <tr>
-              <td>
-                <div style="padding-top:4px; color:red; cursor:pointer; font-size:80%;" onclick="Click2View(this)">[Click To View]</div>
-                <div style="color:yellow; padding-top:4px; font-size:80%;"><u>255.255.255.255</u></div></td><td style="color:green;">$69,420.00
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div style="padding-top:4px; color:red; cursor:pointer; font-size:80%;" onclick="Click2View(this)">[Click To View]</div>
-                <div style="color:yellow; padding-top:4px; font-size:80%;"><u>255.255.255.255</u></div></td><td style="color:green;">$69,420.00
-              </td>
             </tr>
           </table>
         </div>
@@ -192,6 +176,20 @@ if(isset($_SESSION['id']) ){
           </div>
       </div>
     </div>
+    <div id="TaskWindow" class="resizeable">
+      <div id="TaskWindowresize-tleft" class="resize"></div>
+      <div id="TaskWindowresize-tright" class="resize"></div>
+      <div id="TaskWindowresize-bleft" class="resize"></div>
+      <div id="TaskWindowresize-bright" class="resize"></div>
+      <div id="TaskWindowheader">
+        <div id="TaskTitle"><b>Task</b></div>
+        <div id="buttons">
+          <img src="Pictures/reload.png" id="reload" width="15px" onclick="reload();">
+          <img src="Pictures/close.png" id='close' width="15px" onclick="OpenClose('TaskWindow');">
+        </div>
+      </div>
+      <div id="TaskArea"></div>
+    </div>
     <div id="NPCWindow" class="resizeable">
       <div id="NPCWindowresize-tleft" class="resize"></div>
       <div id="NPCWindowresize-tright" class="resize"></div>
@@ -205,23 +203,10 @@ if(isset($_SESSION['id']) ){
         </div>
       </div>
       <div id="NPCArea">
-        <textarea id="searchbar" style="overflow: hidden;" spellcheck="false" wrap="off" rows="1" onkeypress="search(event, this)"></textarea>
-      </div>
-    </div>
-    <div id="TaskWindow" class="resizeable">
-      <div id="TaskWindowresize-tleft" class="resize"></div>
-      <div id="TaskWindowresize-tright" class="resize"></div>
-      <div id="TaskWindowresize-bleft" class="resize"></div>
-      <div id="TaskWindowresize-bright" class="resize"></div>
-      <div id="TaskWindowheader">
-        <div id="TaskTitle"><b>Task</b></div>
-        <div id="buttons">
-          <img src="Pictures/reload.png" id="reload" width="15px" onclick="reload();">
-          <img src="Pictures/close.png" id='close' width="15px" onclick="OpenClose('TaskWindow');">
-        </div>
-      </div>
-      <div id="TaskArea">
-        <textarea id="searchbar" style="overflow: hidden;" spellcheck="false" wrap="off" rows="1" onkeypress="search(event, this)"></textarea>
+        <div id="NPCListCollapse" onclick="OpenClose('NPCList')">NPCs</div>
+        <div id="NPCList"></div>
+        <div id="PlayerListCollapse" onclick="OpenClose('PlayerList')">Players</div>
+        <div id="PlayerList"></div>
       </div>
     </div>
   </div>
