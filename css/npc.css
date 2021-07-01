@@ -29,19 +29,6 @@
   height: calc(100% - 37px);
   position: absolute;
 }
-#searchbar {
-  font-size: 15px;
-  outline: none;
-  width: 80%;
-  resize: none;
-  cursor: text;
-  background-color: grey;
-  border: 1px solid white;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 10px;
-}
 #reload {
   float: left;
 }
