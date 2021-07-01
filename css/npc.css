@@ -45,3 +45,19 @@
 #reload {
   float: left;
 }
+
+#NPCListCollapse, #PlayerListCollapse {
+  width: 100%;
+  color: white;
+  text-align: center;
+  padding-top: 5%;
+  cursor: pointer;
+}
+
+#NPCList, #PlayerList * {
+  width: 95%;
+  color: white;
+  /* padding-top: 5%; */
+  padding-left: 15px;
+  font-size: 75%;
+}
