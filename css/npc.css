@@ -23,6 +23,29 @@
   text-shadow: 1px 1px black;
   cursor: default;
 }
+
+#NPCWindowresize-tleft {
+  cursor: nwse-resize;
+  top: 2px;
+}
+
+#NPCWindowresize-tright {
+  cursor: nesw-resize;
+  top: 2px;
+  right: 0;
+}
+
+#NPCWindowresize-bleft {
+  bottom: -4px;
+  cursor: nesw-resize;
+}
+
+#NPCWindowresize-bright {
+  cursor: nwse-resize;
+  bottom: -4px;
+  right: 0;
+}
+
 #NPCArea {
   overflow: auto;
   width: 100%;
@@ -41,7 +64,7 @@
   cursor: pointer;
 }
 
-#NPCList, #PlayerList * {
+#NPCList, #PlayerList {
   width: 95%;
   color: white;
   /* padding-top: 5%; */
