@@ -7,54 +7,65 @@ require 'db.php';
 $name = $_SESSION['username'];
 $myID = $_SESSION['id'];
 $command = $_POST['command'];
-// $echo = ['command' => $command, 'test' => $test];
-// echo json_encode($echo);
 
 if (strpos($command, 'connect') === 0 && preg_match('~[0-9]+~', $command)) {
     if ($conn->connect_error) {die("Connection failed: " . $conn->connect_error);}
     $commandIP = trim(str_replace("connect", "", $command));
-    $sql= "SELECT id,ip FROM users WHERE ip ='$commandIP'";
-    $sql_u = "SELECT id,ip FROM users WHERE username='$name'";
-    $query1 = $conn->query($sql_u);
-    $query2 = $conn->query($sql);
+    $sql1 = "SELECT id,ip FROM users WHERE ip ='$commandIP'";
+    $sql2 = "SELECT ip FROM users WHERE username='$name'";
+    $sql3 = "SELECT `Name`,IP FROM NPC WHERE `IP`='$commandIP'";
+    $query1 = $conn->query($sql1);
+    $query2 = $conn->query($sql2);
+    $query3 = $conn->query($sql3);
 
     while($result1 = $query1->fetch_assoc()){
-        $currentIP = $result1['ip'];
-        $myID = $result1['id'];
-    }
-    while($result2 = $query2->fetch_assoc()){
-        $IP = $result2['ip'];
-        $DefID = $result2['id'];
+        $IP = $result1['ip'];
+        $DefID = $result1['id'];
     }
 
-    if ($currentIP === $IP) {
+    while($result2 = $query2->fetch_assoc()){
+        $currentIP = $result2['ip'];
+    }
+
+    while($result3 = $query3->fetch_assoc()){
+        $IP = $result3['IP'];
+        $DefID = $result3['Name'];
+    }
+
+    if (isset($IP) && $currentIP === $IP) {
         $valid = 'no';
         $access = "bash: " . $IP . ": You already have access to your own ip<br><br>";
-    } else if ($IP != "") {
+    } else if (isset($IP)) {
         $valid = 'yes';
 
-        $sql4 = "SELECT `level` FROM filesystem WHERE `location` = '$DefID' AND `type` = 'firewall'";
-        $query4 = $conn->query($sql4);
+        $sql = "SELECT `level` FROM filesystem WHERE `location` = '$DefID' AND `type` = 'firewall'";
+        $query = $conn->query($sql);
         $firewalls = array();
-        while($result1 = $query4->fetch_assoc()){
-            array_push($firewalls, intval($result1['level']));
+        while($result = $query->fetch_assoc()){
+            array_push($firewalls, intval($result['level']));
         }
-        $firewall = max($firewalls);
-        if (empty($firewall)) {$firewall = 0;}
-        $sql3 = "SELECT `level` FROM filesystem WHERE `location` = '$myID' AND `type` = 'waterwall'";
-        $query3 = $conn->query($sql3);
+        if (empty($firewall)) {
+            $firewall = 0;
+        } else {
+            $firewall = max($firewalls);
+        }
+        $sql = "SELECT `level` FROM filesystem WHERE `location` = '$myID' AND `type` = 'waterwall'";
+        $query = $conn->query($sql);
         $waterwalls = array();
-        while($result2 = $query3->fetch_assoc()){
-            array_push($waterwalls, intval($result2['level']));
+        while($result = $query->fetch_assoc()){
+            array_push($waterwalls, intval($result['level']));
         }
-        $waterwall = max($waterwalls);
-        if (empty($waterwall)) {$waterwall = 0;}
+        if (empty($waterwall)) {
+            $waterwall = 0;
+        } else {
+            $waterwall = max($waterwalls);
+        }
         
         if ($firewall <= $waterwall) {
             $date = date("m-d-y H:m:s");
             $query3 = "INSERT INTO `log`(`id`, `logType`, `info`, `LoggedIP`, `ipTo`, `currentDate`) VALUES (DEFAULT,'Auth','Warning: A unknown ip has connected to the server','$currentIP','$IP',CURRENT_TIMESTAMP());";
             $query3 .= "INSERT INTO `log`(`id`, `logType`, `info`, `LoggedIP`, `ipTo`, `currentDate`) VALUES (DEFAULT,'server connect','Successfully established a connection to $IP','localhost','$currentIP',CURRENT_TIMESTAMP());";
-            $query3 .= "UPDATE users SET ConnTo = '$IP' WHERE ip = '$currentIP'";
+            $query3 .= "UPDATE users SET ConnTo = '$IP' WHERE id = '$myID'";
             if (mysqli_multi_query($conn, $query3)) {
                 $access = "bash: " . $IP . ": connection established<br><br>";
             } else {
@@ -66,33 +77,41 @@ if (strpos($command, 'connect') === 0 && preg_match('~[0-9]+~', $command)) {
         }
     } else {
         $valid = 'no';
-        $access = "bash: " + $IP + ": Invalid IP<br><br>";
+        $access = "bash: " . $commandIP . ": Invalid IP<br><br>";
     }
 
-    $echo = ['command' => "connect", 'ip' => $IP, 'valid' => $valid, 'access' => $access];
+    $echo = ['command' => "connect", 'ip' => $commandIP, 'valid' => $valid, 'access' => $access];
     echo json_encode($echo);
 
 } else if (strpos($command, 'ls') === 0) {
     if ($conn->connect_error) {die("Connection failed: " . $conn->connect_error);}
-    $sql1= "SELECT ConnTo FROM users WHERE username = '$name'";
-    $query = $conn->query($sql1);
+    $sql = "SELECT ConnTo FROM users WHERE username = '$name'";
+    $query = $conn->query($sql);
     while($result = $query->fetch_assoc()){
         $command = $result['ConnTo'];
     }
     if (preg_match('~[0-9]+~', $command)) {
-        $sql1= "SELECT id FROM users WHERE ip = '$command'";
+        $sql1 = "SELECT id FROM users WHERE ip = '$command'";
+        $sql2 = "SELECT `Name` FROM NPC WHERE ip = '$command'";
         $query1 = $conn->query($sql1);
+        $query2 = $conn->query($sql2);
         while($result1 = $query1->fetch_assoc()){
-            $connID = $result1['id'];
+            $DefID = $result1['id'];
         }
-        $sql= "SELECT * FROM filesystem WHERE `location` = '$connID'";
+        while($result2 = $query2->fetch_assoc()){
+            $DefID = $result2['Name'];
+        }
+        $sql= "SELECT * FROM filesystem WHERE `location` = '$DefID'";
     } else {
         $sql= "SELECT * FROM filesystem WHERE `location` = '$myID'";
     }
-    $query2 = $conn->query($sql);
+    $query = $conn->query($sql);
     $files = array();
-    while($result = $query2->fetch_assoc()){
+    while($result = $query->fetch_assoc()){
         array_push($files, $result);
+    }
+    if (!$files) {
+        $files = "None";
     }
 
     $echo = ['command' => 'ls', 'files' => $files];
@@ -127,10 +146,16 @@ if (strpos($command, 'connect') === 0 && preg_match('~[0-9]+~', $command)) {
         $rm = trim(strtolower(str_replace($commands, '', $command)));
 
         if ($connTo != Null) {
-            $sql1 = "SELECT id FROM users WHERE ip ='$connTo'";
-            $query1 = $conn->query($sql1);
-            while($result1 = $query1->fetch_assoc()){
-                $DefID = $result1['id'];
+            $sql = "SELECT id FROM users WHERE ip = '$connTo'";
+            $query = $conn->query($sql);
+            while($result = $query->fetch_assoc()){
+                $DefID = $result['id'];
+            }
+
+            $sql = "SELECT `Name` FROM NPC WHERE IP = '$connTo'";
+            $query = $conn->query($sql);
+            while($result = $query->fetch_assoc()){
+                $DefID = $result['Name'];
             }
 
             $sql2 = "SELECT `level` FROM filesystem WHERE `location` = '$DefID' AND `id` = '$rm'";
@@ -150,17 +175,11 @@ if (strpos($command, 'connect') === 0 && preg_match('~[0-9]+~', $command)) {
                 }
             }
         } else {
-            $sql1 = "SELECT id FROM users WHERE username = '$name'";
-            $query1 = $conn->query($sql1);
-            while($result1 = $query1->fetch_assoc()){
-                $myID = $result1['id'];
-            }
-
-            $sql2 = "SELECT `name` FROM filesystem WHERE `location` = '$myID' AND id = '$rm'";
-            $query2 = $conn->query($sql2);
+            $sql = "SELECT `name` FROM filesystem WHERE `location` = '$myID' AND id = '$rm'";
+            $query = $conn->query($sql);
             $fileExist = array();
-            while($result2 = $query2->fetch_assoc()){
-                array_push($fileExist, intval($result2));
+            while($result = $query->fetch_assoc()){
+                array_push($fileExist, intval($result));
             }
 
             if (sizeof($fileExist) < 1) {
@@ -179,41 +198,42 @@ if (strpos($command, 'connect') === 0 && preg_match('~[0-9]+~', $command)) {
         $rm = trim(strtolower(str_replace($commands, '', $command)));
 
         if ($connTo != Null) {
-            $sql1 = "SELECT id FROM users WHERE ip ='$connTo'";
-            $query1 = $conn->query($sql1);
-            while($result1 = $query1->fetch_assoc()){
-                $DefID = $result1['id'];
+            $sql = "SELECT id FROM users WHERE ip ='$connTo'";
+            $query = $conn->query($sql);
+            while($result = $query->fetch_assoc()){
+                $DefID = $result['id'];
             }
-            $sql2 = "SELECT * FROM filesystem WHERE `location` = '$DefID' AND `name` = '$rm'";
-            $query2 = $conn->query($sql2);
+
+            $sql = "SELECT `Name` FROM NPC WHERE IP = '$connTo'";
+            $query = $conn->query($sql);
+            while($result = $query->fetch_assoc()){
+                $DefID = $result['Name'];
+            }
+
+            $sql = "SELECT * FROM filesystem WHERE `location` = '$DefID' AND `name` = '$rm'";
+            $query = $conn->query($sql);
             $fileExist = array();
-            while($result2 = $query2->fetch_assoc()){
-                array_push($fileExist, intval($result2));
+            while($result = $query->fetch_assoc()){
+                array_push($fileExist, intval($result));
             }
             if (sizeof($fileExist) > 1) {
                 $fileExist = "There is more then 1 file named " . $rm;
             } else if (sizeof($fileExist) < 1) {
                 $fileExist = "The file " . $rm . " dosen't exist";
             } else {
-                $query3 = "DELETE FROM `filesystem` WHERE `location` = '$DefID' AND `name` = '$rm'";
-                if (mysqli_query($conn, $query3)) {
+                $sql = "DELETE FROM `filesystem` WHERE `location` = '$DefID' AND `name` = '$rm'";
+                if (mysqli_query($conn, $sql)) {
                     $fileExist = $rm . " has been deleted";
                 } else {
-                    $fileExist = "Error: " . $query3 . "<br>" . mysqli_error($conn);
+                    $fileExist = "Error: " . $sql . "<br>" . mysqli_error($conn);
                 }
             }
         } else {
-            $sql1 = "SELECT id FROM users WHERE username = '$name'";
-            $query1 = $conn->query($sql1);
-            while($result1 = $query1->fetch_assoc()){
-                $myID = $result1['id'];
-            }
-
-            $sql2 = "SELECT `name` FROM filesystem WHERE `location` = '$myID' AND `name` = '$rm'";
-            $query2 = $conn->query($sql2);
+            $sql = "SELECT `name` FROM filesystem WHERE `location` = '$myID' AND `name` = '$rm'";
+            $query = $conn->query($sql);
             $fileExist = array();
-            while($result2 = $query2->fetch_assoc()){
-                array_push($fileExist, intval($result2));
+            while($result = $query->fetch_assoc()){
+                array_push($fileExist, intval($result));
             }
 
             if (sizeof($fileExist) > 1) {
@@ -246,39 +266,46 @@ if (strpos($command, 'connect') === 0 && preg_match('~[0-9]+~', $command)) {
         if ($connTo === Null) {
             $upload = "You are not currently connected to anyone";
         } else {
-            $sql1 = "SELECT `name`,`level`,size,`type` FROM filesystem WHERE `location` = '$myID' AND `id` = '$ul'";
-            $query1 = $conn->query($sql1);
+            $sql = "SELECT `name`,`level`,size,`type` FROM filesystem WHERE `location` = '$myID' AND `id` = '$ul'";
+            $query = $conn->query($sql);
             $fileExist = array();
-            while($result1 = $query1->fetch_assoc()){
-                array_push($fileExist, intval($result1['level']));
-                $fileName = $result1['name'];
-                $fileType = $result1['type'];
-                $fileLevel = $result1['level'];
-                $fileSize = $result1['size'];
+            while($result = $query->fetch_assoc()){
+                array_push($fileExist, intval($result['level']));
+                $fileName = $result['name'];
+                $fileType = $result['type'];
+                $fileLevel = $result['level'];
+                $fileSize = $result['size'];
             }
             if (count($fileExist) > 1) {
                 $upload = "There is more then 1 file named " . $ul;
             } else if (count($fileExist) < 1) {
                 $upload = "The file " . $ul . " dosen't exist";
             } else {
-                $sql2 = "SELECT id FROM users WHERE ip ='$connTo'";
-                $query2 = $conn->query($sql2);
-                while($result2 = $query2->fetch_assoc()){
-                    $DefID = $result2['id'];
+                $sql = "SELECT id FROM users WHERE ip ='$connTo'";
+                $query = $conn->query($sql);
+                while($result = $query->fetch_assoc()){
+                    $DefID = $result['id'];
                 }
-                $sql3 = "SELECT `level` FROM filesystem WHERE `location` = '$DefID' AND `name` = '$fileName'";
-                $query3 = $conn->query($sql3);
+
+                $sql = "SELECT `Name` FROM NPC WHERE IP = '$connTo'";
+                $query = $conn->query($sql);
+                while($result = $query->fetch_assoc()){
+                    $DefID = $result['Name'];
+                }
+
+                $sql = "SELECT `level` FROM filesystem WHERE `location` = '$DefID' AND `name` = '$fileName'";
+                $query = $conn->query($sql);
                 $fileExist1 =  array();
-                while($result3 = $query3->fetch_assoc()){
-                    array_push($fileExist1, intval($result3['level']));
+                while($result = $query->fetch_assoc()){
+                    array_push($fileExist1, intval($result['level']));
                 }
                 if (empty($fileExist1) || !in_array($fileExist[0], $fileExist1)) {
-                    $query4 = "INSERT INTO filesystem (id, creator, `name`, `type`, `level`, size, `location`) 
+                    $sql = "INSERT INTO filesystem (id, creator, `name`, `type`, `level`, size, `location`) 
                     VALUES (DEFAULT, '$myID', '$fileName', '$fileType', '$fileLevel', '$fileSize', '$DefID')";
-                    if (mysqli_multi_query($conn, $query4)) {
+                    if (mysqli_multi_query($conn, $sql)) {
                         $upload = "success";
                     } else {
-                        $upload = "Error: " . $query4 . "<br>" . mysqli_error($conn);
+                        $upload = "Error: " . $sql . "<br>" . mysqli_error($conn);
                     }
                 } else {
                     $upload = "The person you are trying to upload to already has " . $fileName;
@@ -292,38 +319,43 @@ if (strpos($command, 'connect') === 0 && preg_match('~[0-9]+~', $command)) {
         if ($connTo === Null) {
             $upload = "You are not currently connected to anyone";
         } else {
-            $sql1 = "SELECT `name`,`level`,size,`type` FROM filesystem WHERE `location` = '$myID' AND `name` = '$ul'";
-            $query1 = $conn->query($sql1);
+            $sql = "SELECT `name`,`level`,size,`type` FROM filesystem WHERE `location` = '$myID' AND `name` = '$ul'";
+            $query = $conn->query($sql);
             $fileExist = array();
-            while($result1 = $query1->fetch_assoc()){
-                array_push($fileExist, intval($result1['level']));
-                $fileType = $result1['type'];
-                $fileLevel = $result1['level'];
-                $fileSize = $result1['size'];
+            while($result = $query->fetch_assoc()){
+                array_push($fileExist, intval($result['level']));
+                $fileType = $result['type'];
+                $fileLevel = $result['level'];
+                $fileSize = $result['size'];
             }
             if (count($fileExist) > 1) {
                 $upload = "There is more then 1 file named " . $ul;
             } else if (count($fileExist) < 1) {
                 $upload = "The file " . $ul . " dosen't exist";
             } else {
-                $sql2 = "SELECT id FROM users WHERE ip ='$connTo'";
-                $query2 = $conn->query($sql2);
-                while($result2 = $query2->fetch_assoc()){
-                    $DefID = $result2['id'];
+                $sql = "SELECT id FROM users WHERE ip ='$connTo'";
+                $query = $conn->query($sql);
+                while($result = $query->fetch_assoc()){
+                    $DefID = $result['id'];
                 }
-                $sql3 = "SELECT `level` FROM filesystem WHERE `location` = '$DefID' AND `name` = '$ul'";
-                $query3 = $conn->query($sql3);
+                $sql = "SELECT `Name` FROM NPC WHERE IP = '$connTo'";
+                $query = $conn->query($sql);
+                while($result = $query->fetch_assoc()){
+                    $DefID = $result['Name'];
+                }
+                $sql = "SELECT `level` FROM filesystem WHERE `location` = '$DefID' AND `name` = '$ul'";
+                $query = $conn->query($sql);
                 $fileExist1 =  array();
-                while($result3 = $query3->fetch_assoc()){
-                    array_push($fileExist1, intval($result3['level']));
+                while($result = $query->fetch_assoc()){
+                    array_push($fileExist1, intval($result['level']));
                 }
                 if (empty($fileExist1) || !in_array($fileExist[0], $fileExist1)) {
-                    $query4 = "INSERT INTO filesystem (id, creator, `name`, `type`, `level`, size, `location`) 
+                    $sql = "INSERT INTO filesystem (id, creator, `name`, `type`, `level`, size, `location`) 
                     VALUES (DEFAULT, '$myID', '$ul', '$fileType', '$fileLevel', '$fileSize', '$DefID')";
-                    if (mysqli_multi_query($conn, $query4)) {
+                    if (mysqli_multi_query($conn, $sql)) {
                         $upload = "success";
                     } else {
-                        $upload = "Error: " . $query4 . "<br>" . mysqli_error($conn);
+                        $upload = "Error: " . $sql . mysqli_error($conn);
                     }
                 } else {
                     $upload = "The person you are trying to upload to already has " . $ul;
@@ -333,44 +365,91 @@ if (strpos($command, 'connect') === 0 && preg_match('~[0-9]+~', $command)) {
     }
     $echo = ['command' => 'ul', 'upload' => $upload];
     echo json_encode($echo);
-} else if (strpos($command, 'dl') === 0 || strpos($command, 'download') === 0) {
-    $commands = array('dl', 'download');
-    $dl = trim(strtolower(str_replace($commands, '', $command)));
-    if ($dl === "firewall" || $dl === "waterwall" || $dl === "antivirus" || $dl === "malware") {
-        $sql = "SELECT ConnTo FROM users WHERE username='$name'";
+} else if (strpos($command, 'dl') === 0 || strpos($command, 'download') === 0 || strpos($command, 'dlid') === 0 || strpos($command, 'downloadid') === 0) {
+    $sql = "SELECT ConnTo FROM users WHERE username='$name'";
+    $query = $conn->query($sql);
+    while($result = $query->fetch_assoc()){
+        $connTo = $result['ConnTo'];
+    }
+
+    if ($connTo === Null) {
+        $download = "You are not currently connected to anyone";
+    } else {
+        $sql = "SELECT id FROM users WHERE ip ='$connTo'";
         $query = $conn->query($sql);
         while($result = $query->fetch_assoc()){
-            $connTo = $result['ConnTo'];
+            $DefID = $result['id'];
         }
 
-        if ($connTo === Null) {
-            $download = "You are not currently connected to anyone";
-        } else {
-            $sql2 = "SELECT username FROM users WHERE ip ='$connTo'";
-            $query2 = $conn->query($sql2);
-            while($result2 = $query2->fetch_assoc()){
-                $connToName = $result2['username'];
+        $sql = "SELECT `Name` FROM NPC WHERE IP = '$connTo'";
+        $query = $conn->query($sql);
+        while($result = $query->fetch_assoc()){
+            $DefID = $result['Name'];
+        }
+        if (strpos($command, 'dlid') === 0 || strpos($command, 'downloadid') === 0) {
+            $commands = array('dlid', 'downloadid');
+            $dl = trim(strtolower(str_replace($commands, '', $command)));
+            $sql = "SELECT `name`,`level`,size FROM filesystem WHERE `location` = '$DefID' AND id = '$dl'";
+            $query = $conn->query($sql);
+            while($result = $query->fetch_assoc()){
+                $fileName = $result['name'];
+                $fileLevel = $result['level'];
+                $fileSize = $result['size'];
             }
-            $sql1 = "SELECT $dl FROM filesystem WHERE username = '$connToName'";
-            $query1 = $conn->query($sql1);
-            while($result1 = $query1->fetch_assoc()){
-                $fileExist = $result1["$dl"];
-            }
-            if (strval($fileExist) != "0") {
-                $sql3 = "SELECT $dl FROM filesystem WHERE username = '$name'";
-                $query3 = $conn->query($sql3);
-                while($result3 = $query3->fetch_assoc()){
-                    $fileExist1 = $result3["$dl"];
+            if (isset($fileLevel)) {
+                $sql = "SELECT `level` FROM filesystem WHERE `location` = '$myID' AND `name` = '$fileName'";
+                $query = $conn->query($sql);
+                while($result = $query->fetch_assoc()){
+                    $fileLevel1 = $result['level'];
                 }
-                if (intval($fileExist) > intval($fileExist1)) {
-                    $query4 = "UPDATE filesystem SET $dl = '$fileExist' WHERE username = '$name'";
-                    if (mysqli_query($conn, $query4)) {
-                        $download = $dl . " has been downloaded";
+
+                if(!isset($fileLevel1)){
+                    $fileLevel1 = 0;
+                    $sql = "INSERT INTO `filesystem`(`id`, `creator`, `name`, `type`, `level`, `size`, `location`) VALUES (DEFAULT,'$DefID','$fileName','$fileName','$fileLevel','$fileSize','$myID')";
+                } else {
+                    $sql = "UPDATE filesystem SET `level` = '$fileLevel', size = '$fileSize' WHERE `location` = '$myID' AND `id` = '$dl'";
+                }
+                if ($fileLevel > $fileLevel1) {
+                    if (mysqli_query($conn, $sql)) {
+                        $download = $dl . " has been downloaded". $fileLevel . " " . $fileLevel1;
                     } else {
-                        $download = "Error: " . $query4 . "<br>" . mysqli_error($conn);
+                        $download = "Error: " . $sql . "<br>" . mysqli_error($conn);
                     }
                 } else {
-                    $download = "You already have a greater virsion of that file";
+                    $download = "You already have a equal to or greater than virsion of that file";
+                }
+            } else {
+                $download = "The file you are trying to download does not exist";
+            }
+        } else {
+            $commands = array('dl', 'download');
+            $dl = trim(strtolower(str_replace($commands, '', $command)));
+            $sql = "SELECT `level`,`size` FROM `filesystem` WHERE `location` = '$DefID' AND `name` = '$dl'";
+            $query = $conn->query($sql);
+            while($result = $query->fetch_assoc()){
+                $fileLevel = $result['level'];
+                $fileSize = $result['size'];
+            }
+            if (isset($fileLevel)) {
+                $sql = "SELECT `level` FROM filesystem WHERE `location` = '$myID' AND `name` = '$dl'";
+                $query = $conn->query($sql);
+                while($result = $query->fetch_assoc()){
+                    $fileLevel1 = $result['level'];
+                }
+                if(!isset($fileLevel1)){
+                    $fileLevel1 = 0;
+                    $sql = "INSERT INTO `filesystem`(`id`, `creator`, `name`, `type`, `level`, `size`, `location`) VALUES (DEFAULT,'$DefID','$dl','$dl','$fileLevel','$fileSize','$myID')";
+                } else {
+                    $sql = "UPDATE filesystem SET `level` = '$fileLevel', size = '$fileSize' WHERE `location` = '$myID' AND `name` = '$dl'";
+                }
+                if ($fileLevel > $fileLevel1) {
+                    if (mysqli_query($conn, $sql)) {
+                        $download = $dl . " has been downloaded";
+                    } else {
+                        $download = "Error: " . $sql . "<br>" . mysqli_error($conn);
+                    }
+                } else {
+                    $download = "You already have a equal to or greater than virsion of that file";
                 }
             } else {
                 $download = "The file you are trying to download does not exist";
@@ -382,36 +461,52 @@ if (strpos($command, 'connect') === 0 && preg_match('~[0-9]+~', $command)) {
 } else if (strpos($command, 'whois') === 0) {
     $whois = trim(strtolower(str_replace('whois', '', $command)));
     if (preg_match('~[0-9]+~', $whois)) {
-        $sql= "SELECT * FROM users WHERE ip ='$whois'";
+        $sql= "SELECT username,ActivationDate,ConnTo FROM users WHERE ip ='$whois'";
         $query = $conn->query($sql);
-    
-        while($result = $query->fetch_assoc()){
-            $username = $result['username'];
-            $ActivationDate = $result['ActivationDate'];
-            $ConnTo = $result['ConnTo'];
-        }
-        if ($username != "" && $ActivationDate != "") {
-            if ($ConnTo === Null) {$ConnTo = "No one";}
-            $echo = ['command' => "whois", 'whois' => 'Username: ' . $username . '<br>Activation Date: ' . $ActivationDate . '<br>ConnTo: ' . $ConnTo];
-            echo json_encode($echo);
-        } else {
-            $echo = ['command' => "whois", 'whois' => 'Invalid IP'];
-            echo json_encode($echo);
-        }
-    } else {
-        $sql= "SELECT * FROM users WHERE username ='$name'";
-        $query = $conn->query($sql);
-    
+
         while($result = $query->fetch_assoc()){
             $username = $result['username'];
             $ActivationDate = $result['ActivationDate'];
             $ConnTo = $result['ConnTo'];
         }
 
-        if ($ConnTo === Null) {$ConnTo = "No one";}
-        $echo = ['command' => 'whois', 'whois' => 'Username: ' . $username . '<br>Activation Date: ' . $ActivationDate . '<br>ConnTo: ' . $ConnTo];
-        echo json_encode($echo);
+        $sql= "SELECT `Name`,CPU FROM NPC WHERE IP ='$whois'";
+        $query = $conn->query($sql);
+
+        while($result = $query->fetch_assoc()){
+            $NpcName = $result['Name'];
+            $NpcCPU = $result['CPU'];
+        }
     }
+
+    if (!isset($username) || !isset($NpcName)) {
+        $sql= "SELECT username,ActivationDate,ConnTo FROM users WHERE username ='$whois'";
+        $query = $conn->query($sql);
+
+        while($result = $query->fetch_assoc()){
+            $username = $result['username'];
+            $ActivationDate = $result['ActivationDate'];
+            $ConnTo = $result['ConnTo'];
+        }
+
+        $sql= "SELECT CPU FROM NPC WHERE `Name` ='$whois'";
+        $query = $conn->query($sql);
+
+        while($result = $query->fetch_assoc()){
+            $NpcName = $whois;
+            $NpcCPU = $result['CPU'];
+        }
+    }
+
+    if (isset($username)) {
+        if ($ConnTo === Null) {$ConnTo = "No one";}
+        $echo = ['command' => "whois", 'whois' => 'Username: ' . $username . '<br>Activation Date: ' . $ActivationDate . '<br>ConnTo: ' . $ConnTo];
+    } else if (isset($NpcName)){
+        $echo = ['command' => "whois", 'whois' => 'Name: ' . $NpcName . '<br>CPU: ' . $NpcCPU];
+    } else {
+        $echo = ['command' => "whois", 'whois' => 'Invalid Whois Name/IP'];
+    }
+    echo json_encode($echo);
 } else if (strpos($command, 'gen npc') === 0) {
     $NpcName = trim(str_replace('gen npc', '', $command));
     if ($NpcName != "") {
