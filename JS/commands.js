@@ -57,6 +57,8 @@ function submit(e, textarea) {
         type = command[2];
         message = command[3];
         notify(lifespan, type, message);
+      } else if (command.startsWith("help")) {
+        commandOutput.innerHTML = "The commands are: [connect, bye, ls, (ul, dl, rm) or (ulid, dlid, rmid), whois [name or ip], gen npc [name], recovery, notify [lifespan (in ms), type (alert, success, info, warning), message]]";
       }
     }
   }
@@ -85,10 +87,28 @@ function alertContents() {
           commandOutput.innerHTML += response.access;
         }
       } else if (response.command === "ls") {
-        var currentFiles = response.files;
-        var list = "";
-        for (i = 0; i < currentFiles.length; i++) {
-          list += "<tr><td>" + currentFiles[i]['id'] + "</td><td>" + currentFiles[i]['name'] + "</td><td>v" + currentFiles[i]['level'] + "</td><td>" + currentFiles[i]['size'] + " GB</td><td>" + currentFiles[i]['type'] + "</td></tr>";
+        currentFiles = response.files
+        if (response.files == "None") {
+          commandOutput.innerHTML += "No files have been found<br><br>";
+        } else {
+          var tbl = document.createElement('table');
+          tbl.style.width = '100%';
+          var tbdy = document.createElement('tbody');
+          var row = tbl.insertRow(0);
+          row.insertCell(0).innerHTML = "<div style='text-align:center; font-weight:bold; font-size:100%;'>ID</div>";
+          row.insertCell(1).innerHTML = "<div style='text-align:center; font-weight:bold; font-size:100%;'>Name</div>";
+          row.insertCell(2).innerHTML = "<div style='text-align:center; font-weight:bold; font-size:100%;'>Level</div>"; 
+          row.insertCell(3).innerHTML = "<div style='text-align:center; font-weight:bold; font-size:100%;'>Size</div>"; 
+          row.insertCell(4).innerHTML = "<div style='text-align:center; font-weight:bold; font-size:100%;'>Type</div>"; 
+          for (var i = 0; i < response.files.length; i++) {
+            var row = tbl.insertRow(i+1);
+            row.insertCell(0).innerHTML = "<div style='text-align:center;'>" + currentFiles[i]['id'] + "</div>";
+            row.insertCell(1).innerHTML = "<div style='text-align:center;'>" + currentFiles[i]['name'] + "</div>";
+            row.insertCell(2).innerHTML = "<div style='text-align:center;'>v" + currentFiles[i]['level'] + "</div>";
+            row.insertCell(3).innerHTML = "<div style='text-align:center;'>" + currentFiles[i]['size'] + "GB</div>";
+            row.insertCell(4).innerHTML = "<div style='text-align:center;'>" + currentFiles[i]['type'] + "</div>";
+          }
+          commandOutput.appendChild(tbl);
         }
         //console.log(commandOutput.innerHTML += "<table  width='100%'><tr><th>#</th><th>Name</th><th>Version</th><th>Size</th><th>Type</th></tr><div id='file-output'>" + list + "</div></table><br>");
       } else if (response.command === "rm") {
@@ -150,12 +170,10 @@ function alertContents() {
         }
       } else if (response.command === "list") {
         NPCs = document.getElementById("NPCList");
-        Players = document.getElementById("PlayerList");//cells [ icons | ip | name | cpu | notes ]
+        Players = document.getElementById("PlayerList");
         NPCs.innerHTML = "";
         Players.innerHTML = "";
-        console.log(response.npcs[1]);
 
-        //cells [ icons | ip | name | cpu | notes ]
         var tbl = document.createElement('table');
         tbl.style.width = '100%';
         var tbdy = document.createElement('tbody');
@@ -184,15 +202,8 @@ function alertContents() {
         }
         tbl.appendChild(tbdy);
         NPCs.appendChild(tbl)
-        // for (i = 0; i < response.npcs.length; i += 3) {
-        //   Name = response.npcs[i];
-        //   ip = response.npcs[i+1];
-        //   cpu = response.npcs[i+2];
-
-        //   NPCs.innerHTML += "<p style='color:gray;'><u style='color:orange;'>" + ip + "</u><br>" + Name + " - " + cpu + "MHz</p>";
-        // }
         
-        for (i = 0; i < response.players.length; i += 3) {
+        for (i = 0; i < response.players.length; i++) {
           Name = response.players[i];
           ip = response.players[i+1];
 
@@ -318,8 +329,4 @@ function BTC(option) {
 
 function Finances() {
   makeRequest('php/commands.php', "Finances");
-}
-
-function ListPlayers() {
-  makeRequest('php/commands.php', "list");
 }
