@@ -160,16 +160,25 @@ function alertContents() {
         tbl.style.width = '100%';
         var tbdy = document.createElement('tbody');
         for (var i = 0; i < response.npcs.length; i += 3) {
+          Name = response.npcs[i];
+          ip = response.npcs[i+1];
+          cpu = response.npcs[i+2];
           var tr = document.createElement('tr');
-          for (var j = 0; j < 2; j++) {
-            if (i == 2 && j == 1) {
-              break
-            } else {
-              var cell = document.createElement('td');
-              var cellText = document.createTextNode()
-              cell.appendChild(cellText)
-              tr.appendChild(td)
+          for (var j = 0; j < 5; j++) {
+            var cell = document.createElement('td');
+            if (j == 0){
+              var cellText = '<img src="Pictures/ddos.png" width="15px" onclick="nothing()"></img>';
+            } else if (j == 1) {
+              var cellText = "<u style='color:orange;'>" + ip + "</u>";
+            } else if (j == 2) {
+              var cellText = "<p style='color:gray;'>" + Name + "</p>";
+            } else if (j == 3) {
+              var cellText = cpu + "MHz";
+            } else if (j == 4) {
+              var cellText = "<textarea rows='1'></textarea>";
             }
+            cell.innerHTML = cellText;
+            tr.appendChild(cell);
           }
           tbdy.appendChild(tr);
         }
