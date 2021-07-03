@@ -38,6 +38,12 @@ if(isset($_SESSION['id']) ){
   <link href="css/task.css" rel="stylesheet" type="text/css">
   <link href="css/npc.css" rel="stylesheet" type="text/css">
   <title>SH3?</title>
+
+  <script type='text/javascript'>
+    const username = "<?php echo $User['username']; ?>";
+    const id = "<?php echo $User['id']; ?>";
+  </script>
+  
 </head>
 <body>
   <div id="AllWindows">
@@ -77,7 +83,6 @@ if(isset($_SESSION['id']) ){
         <div id="TermTitle"><b>WebTerminal - IP</b></div>
         <script> 
           var currentIP = "<?php echo $User['ip'] ?>";
-          var username = "<?php echo $User['username'] ?>"
           header = document.getElementById("TermTitle");
           header.innerHTML = "<b>WebTerminal - " + currentIP + "</b>";
         </script>
@@ -120,7 +125,7 @@ if(isset($_SESSION['id']) ){
         </div>
       </div>
       <div id="user-messages"></div>
-      <textarea id="send-message" style="overflow: hidden;" spellcheck="false" wrap="off" rows="1" onkeypress="sendChat(event, this)"></textarea>
+      <textarea id="send-message" style="overflow: hidden;" spellcheck="false" wrap="off" rows="1" onkeypress="sendChat(event, this, username)"></textarea>
     </div>
     <div id="notify"></div>
     <div id="BrowserWindow" class="resizeable">

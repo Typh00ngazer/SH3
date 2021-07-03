@@ -2,10 +2,6 @@
 
 session_start();
 
-// if(isset($_SESSION['id']) ){
-// 	header("Location: /");
-// }
-
 require 'db.php';
 
 if ($conn->connect_error) {

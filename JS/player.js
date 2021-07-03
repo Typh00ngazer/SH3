@@ -1,4 +1,4 @@
-var songs = ["Beats.ogg", "DUMBO.ogg", "rando-claps.ogg", "STARS.ogg"];
+var songs = ["Bad-History.ogg", "Beats.ogg", "DrazRap.ogg", "DUMBO.ogg", "Bad-History-BIDEN-_Timefracture_.ogg", "rando-claps.ogg", "STARS.ogg", "TIMEFRACTURE.ogg", "Unus-Annus-Disclaimer-Song.ogg"];
 var songTitle = document.getElementById('songTitle');
 var songSlider = document.getElementById('songSlider');
 var currentTime = document.getElementById('currentTime');

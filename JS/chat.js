@@ -5,8 +5,6 @@ BrowserArea = document.getElementById("BrowserArea");
 
 socket.onopen = () => {
   console.log('connection established');
-  // id = String(Math.random()).substring(2);
-  // console.log('chat id: ' + id);
 }
 
 socket.onclose = () => {
@@ -50,7 +48,7 @@ socket.onmessage = (e) => {
   //console.log(message);
 }
 
-function sendChat(e, textarea) {
+const sendChat = (e, textarea, username, id) => {
   if (e.keyCode === 13) {
     e.preventDefault();
     if (textarea.value.trim() != "") {
@@ -58,7 +56,7 @@ function sendChat(e, textarea) {
         type: "message",
         name: username,
         text: textarea.value.trim(),
-        id:   String(Math.random()).substring(2),
+        id:   id,
         date: Date.now()
       };
       socket.send(JSON.stringify(msg));

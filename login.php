@@ -8,7 +8,7 @@ if(isset($_SESSION['id']) ){
 
 require 'php/db.php';
 
-if(!empty($_POST['email']) && !empty($_POST['password'])):
+if(!empty($_POST['email']) && !empty($_POST['password'])) {
 	
 	$email = $_POST['email'];
 	$password = $_POST['password'];
@@ -25,19 +25,18 @@ if(!empty($_POST['email']) && !empty($_POST['password'])):
 
 	$message = '';
 
-	if($DBpass == true && password_verify($password, $DBpass) ){
+	if($DBpass == true && password_verify($password, $DBpass)) {
 
 		$_SESSION['id'] = $user['id'];
 		$_SESSION['username'] = $user['username'];
 		$_SESSION['email'] = $user['email'];
 		$_SESSION['ip'] = $user['ip'];
-		header("Location: WebTerminal.php");
+		header("Location: /");
 
 	} else {
 		$message = 'Sorry, those credentials do not match';
 	}
-
-endif;
+}
 
 ?>
 

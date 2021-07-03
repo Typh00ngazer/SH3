@@ -3,9 +3,7 @@ fs = require('fs');
 const wss = new WebSocket.Server({ port: 8080 });
  
 wss.on('connection', ws => {
-  //ws.id = String(Math.random()).substring(2)
   ws.onmessage = function(event) {
-    //console.log(ws.id);
     var message = JSON.parse(event.data);
     switch(message.type) {
       case "message":
