@@ -24,5 +24,5 @@ clean up some of the code and continue to harass jesse
 
 # Done
 
-Make a update notification pop up when there has been a change
+Make a update notification pop up when there has been a change 
 Make npc/player list and finance list load when the page is first loaded
