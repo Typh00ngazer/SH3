@@ -243,8 +243,8 @@ if(isset($_SESSION['id']) ){
 
           <b>Done:</b> <br><br>
 
-          Done - Make npc/player list and finance list load when the page is first loaded<br><br>
-          Done - Make a update notification pop up when there has been a change
+          Make npc/player list and finance list load when the page is first loaded<br><br>
+          Make a update notification pop up when there has been a change
         </div>
       </div>
     </div>
