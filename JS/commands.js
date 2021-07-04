@@ -210,6 +210,26 @@ function alertContents() {
 
           Players.innerHTML += "<p>" + Name + "</p>";
         }
+      } else if (response.command === "stats" || response.command === "stat") {
+        gateright = document.getElementById("Gateright");
+        if (response.command === "stats") {
+          gateright.innerHTML = "Rank: " + response.stats[0] + "<br>Rep: " + response.stats[1] + "<br>Cpu: " + response.stats[2] + " MHz<br>Network: " + response.stats[3] + " Mbps<br>Hard Drive: " + response.stats[4] + "GB<br>External Drive: " + response.stats[5] + "GB";
+        } else {
+          if (response.name === "cpu") {
+            reName = "Cpu: "
+            reEnd = " MHz"
+          } else if (response.name === "network") {
+            reName = "Network: "
+            reEnd = " Mbps"
+          } else if (response.name === "harddrive") {
+            reName = "Hard Drive: "
+            reEnd = "GB"
+          } else if (response.name === "nas") {
+            reName = "External Drive: "
+            reEnd = "GB"
+          }
+          gateright.innerHTML = reName + response.stat + reEnd;
+        }
       }
     } else {
       alert('There was a problem with the request.');
@@ -343,4 +363,8 @@ function onLoad() {
   } else {
     document.getElementById("UpdateWindow").remove();
   }
+}
+
+function gateway(requested) {
+  makeRequest('php/commands.php', requested);
 }

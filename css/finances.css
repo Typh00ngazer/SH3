@@ -42,9 +42,6 @@
   margin-right: auto;
   margin-top: 10px;
 }
-#reload {
-  float: left;
-}
 
 #FinancesWindowresize-tleft {
   cursor: nwse-resize;
@@ -68,7 +65,7 @@
   right: 0;
 }
 
-#left {
+#Financesleft {
   float: left;
   height: 100%;
   width: 70%;
@@ -76,7 +73,7 @@
   text-align: center;
 }
 
-#right {
+#Financesright {
   float: right;
   height: 100%;
   width: 29.5%;

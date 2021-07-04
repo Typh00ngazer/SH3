@@ -690,6 +690,26 @@ if (strpos($command, 'connect') === 0 && preg_match('~[0-9]+~', $command)) {
 
     $echo = ['command' => 'list', 'npcs' => $NPCs, 'players' => $Players];
     echo json_encode($echo);
+} else if ($command == 'stats' || $command == 'cpu' || $command == 'network' || $command == 'harddrive' || $command == 'nas') {
+    $sql = "SELECT * FROM stats WHERE id = '$myID'";
+    $query = $conn->query($sql);
+
+    if ($command == 'stats') {
+        $requested = [];
+        while ($result = $query->fetch_assoc()){
+            array_push($requested, $result['rank'], $result['rep'], $result['cpu'], $result['network'], $result['harddrive'], $result['nas']);
+        }
+        $echo = ['command' => 'stats', 'stats' => $requested];
+    } else {
+        while ($result = $query->fetch_assoc()){
+            $requested = $result["$command"];
+        }
+        $echo = ['command' => 'stat', 'name' => $command, 'stat' => $requested];
+    }
+    echo json_encode($echo);
+} else {
+    $echo = ['command' => 'none'];
+    echo json_encode($echo);
 }
 $conn->close();
 ?>

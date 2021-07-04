@@ -6,12 +6,13 @@ browser = document.getElementById("BrowserWindow");
 finances = document.getElementById("FinancesWindow");
 task = document.getElementById("TaskWindow");
 npc = document.getElementById("NPCWindow");
+gate = document.getElementById("GateWindow");
 
 let wIndexArray = localStorage.getItem('wIndexArray');
 if (wIndexArray !== null) {
   wIndexArray = wIndexArray.split(',');
 } else {
-  wIndexArray = ['player', 'chat', 'npc', 'browser', 'finances', 'logs', 'task', 'terminal',];
+  wIndexArray = ['player', 'chat', 'npc', 'browser', 'gate', 'finances', 'logs', 'task', 'terminal',];
   localStorage.setItem('wIndexArray', wIndexArray);
 }
 
@@ -46,7 +47,7 @@ window.onload = function() {
     }
   }
 
-  ajustW = ['TermWindow', 'LogsWindow', 'ChatWindow','BrowserWindow', 'audio-player-cont', 'FinancesWindow', 'TaskWindow', 'NPCWindow'];
+  ajustW = ['TermWindow', 'LogsWindow', 'ChatWindow','BrowserWindow', 'GateWindow', 'audio-player-cont', 'FinancesWindow', 'TaskWindow', 'NPCWindow'];
   for(var i = 0; i < ajustW.length; i++) {
     elmnt = document.getElementById(ajustW[i]);
     storage = localStorage.getItem(ajustW[i]);
@@ -57,7 +58,7 @@ window.onload = function() {
       localStorage.setItem(ajustW[i], storage);
     }
 
-    if (ajustW[i] === 'TermWindow' || ajustW[i] === 'LogsWindow' || ajustW[i] === 'ChatWindow' || ajustW[i] === 'BrowserWindow' || ajustW[i] === 'FinancesWindow' || ajustW[i] === 'TaskWindow' || ajustW[i] === 'NPCWindow') {
+    if (ajustW[i] !== 'audio-player-cont') {
 
       elmnt.style.position = "absolute";
       elmnt.style.left = storage[0]+'px';
@@ -65,7 +66,7 @@ window.onload = function() {
       elmnt.style.width = storage[2]+'px';
       elmnt.style.height = storage[3]+'px';
 
-    } else if (ajustW[i] === 'audio-player-cont') {
+    } else {
 
       elmnt.style.position = "absolute";
       elmnt.style.left = storage[0]+'px';
@@ -121,6 +122,7 @@ resizeElemnt(browser);
 resizeElemnt(finances);
 resizeElemnt(task);
 resizeElemnt(npc);
+resizeElemnt(gate);
 
 function resizeElemnt(element) {
   const minimum_size = 300;
@@ -204,6 +206,7 @@ dragElement(player);
 dragElement(finances);
 dragElement(task);
 dragElement(npc);
+dragElement(gate);
     
 function dragElement(elmnt) {
   var pos1 = 0, pos2 = 0;
@@ -262,6 +265,8 @@ terminal.addEventListener('mousedown', e => {
       task.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'npc') {
       npc.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'gate') {
+      gate.style.zIndex = i+1;
     }
   }
 });
@@ -287,6 +292,8 @@ player.addEventListener('mousedown', e => {
       task.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'npc') {
       npc.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'gate') {
+      gate.style.zIndex = i+1;
     }
   }
 });
@@ -312,6 +319,8 @@ logs.addEventListener('mousedown', e => {
       task.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'npc') {
       npc.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'gate') {
+      gate.style.zIndex = i+1;
     }
   }
 });
@@ -337,6 +346,8 @@ browser.addEventListener('mousedown', e => {
       task.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'npc') {
       npc.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'gate') {
+      gate.style.zIndex = i+1;
     }
   }
 });
@@ -362,6 +373,8 @@ chat.addEventListener('mousedown', e => {
       task.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'npc') {
       npc.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'gate') {
+      gate.style.zIndex = i+1;
     }
   }
 });
@@ -387,6 +400,8 @@ finances.addEventListener('mousedown', e => {
       task.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'npc') {
       npc.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'gate') {
+      gate.style.zIndex = i+1;
     }
   }
 });
@@ -412,6 +427,8 @@ task.addEventListener('mousedown', e => {
       task.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'npc') {
       npc.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'gate') {
+      gate.style.zIndex = i+1;
     }
   }
 });
@@ -437,13 +454,40 @@ npc.addEventListener('mousedown', e => {
       task.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'npc') {
       npc.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'gate') {
+      gate.style.zIndex = i+1;
     }
   }
 });
 
-function TextBox() {
-  document.getElementById("termarea").focus();
-}
+gate.addEventListener('mousedown', e => {
+  wIndexArray = wIndexArray.filter(e => e !== 'gate');
+  wIndexArray.push('gate');
+  localStorage.setItem('wIndexArray', wIndexArray);
+  for(var i = 0; i < wIndexArray.length; i++) {
+    if (wIndexArray[i] === 'player') {
+      player.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'logs') {
+      logs.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'chat') {
+      chat.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'browser') {
+      browser.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'terminal') {
+      terminal.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'finances') {
+      finances.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'task') {
+      task.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'npc') {
+      npc.style.zIndex = i+1;
+    } else if (wIndexArray[i] === 'gate') {
+      gate.style.zIndex = i+1;
+    }
+  }
+});
+
+function TextBox() {document.getElementById("termarea").focus();}
 
 function switchTo() {
   remotelog = document.getElementById("logs-remote");

@@ -1,4 +1,4 @@
-#TaskWindow {
+#GateWindow {
   position: absolute;
   z-index: 1;
   background: black;
@@ -8,16 +8,14 @@
   overflow: hidden;
   border-radius: 8px;
 }
-
-#TaskWindowheader {
+#GateWindowheader {
   border: 1px solid white;
   padding: 10px;
   height: 15px;
   background-color: grey;
   color: #fff;
 }
-
-#TaskTitle {
+#GateTitle {
   font-size: 12px;
   position: absolute;
   padding-left: 5px;
@@ -26,31 +24,48 @@
   cursor: default;
 }
 
-#TaskArea {
+#GateWindowresize-tleft {
+  cursor: nwse-resize;
+  top: 2px;
+}
+
+#GateWindowresize-tright {
+  cursor: nesw-resize;
+  top: 2px;
+  right: 0;
+}
+
+#GateWindowresize-bleft {
+  bottom: -4px;
+  cursor: nesw-resize;
+}
+
+#GateWindowresize-bright {
+  cursor: nwse-resize;
+  bottom: -4px;
+  right: 0;
+}
+
+#GateArea {
   overflow: auto;
   width: 100%;
   height: calc(100% - 37px);
   position: absolute;
 }
 
-#TaskWindowresize-tleft {
-  cursor: nwse-resize;
-  top: 2px;
+#Gateleft {
+  float: left;
+  height: 100%;
+  width: 29.5%;
+  border-right: 2px solid gray;
+  text-align: center;
 }
 
-#TaskWindowresize-tright {
-  cursor: nesw-resize;
-  top: 2px;
-  right: 0;
-}
-
-#TaskWindowresize-bleft {
-  bottom: -4px;
-  cursor: nesw-resize;
-}
-
-#TaskWindowresize-bright {
-  cursor: nwse-resize;
-  bottom: -4px;
-  right: 0;
+#Gateright {
+  float: right;
+  height: calc(100% - 15px);
+  width: 70%;
+  text-align: center;
+  color:white;
+  padding-top: 15px;
 }

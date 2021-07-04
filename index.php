@@ -37,6 +37,7 @@ if(isset($_SESSION['id']) ){
   <link href="css/finances.css" rel="stylesheet" type="text/css">
   <link href="css/task.css" rel="stylesheet" type="text/css">
   <link href="css/npc.css" rel="stylesheet" type="text/css">
+  <link href="css/gate.css" rel="stylesheet" type="text/css">
   <title>SH3?</title>
 
   <script type='text/javascript'>
@@ -157,7 +158,7 @@ if(isset($_SESSION['id']) ){
         </div>
       </div>
       <div id="FinancesArea">
-        <div id="left">
+        <div id="Financesleft">
           <div id="USDTitle" style="color:white; padding-top:8px;">Bank Accounts</div>
           <div id="moneyTotal" style="color:green; padding-top:4px; font-size:75%;">$69,420.00</div>
           <table  id="accountTable" width='100%' style="color:white; padding-top:16px;">
@@ -167,18 +168,18 @@ if(isset($_SESSION['id']) ){
             </tr>
           </table>
         </div>
-          <div id="right">
-            <div id="BTCTitle" style="color:white; padding-top:8px;">BTC Account</div>
-            <div id="btcTotal" style="color:yellow; padding-top:4px; font-size:75%;">69,420.00</div>
-            <br>
-            <select id="btcOptions" style='width: 95%' onchange='BTC(value)'>
-              <option value="redeem">Redeem Packet</option>
-              <option value="create">Create Packet</option>
-              <option value="buy">Buy BTC</option>
-              <option value="sell">Sell BTC</option>
-            </select>
-            <div id="OptionArea"></div>
-          </div>
+        <div id="Financesright">
+          <div id="BTCTitle" style="color:white; padding-top:8px;">BTC Account</div>
+          <div id="btcTotal" style="color:yellow; padding-top:4px; font-size:75%;">69,420.00</div>
+          <br>
+          <select id="btcOptions" style='width: 95%' onchange='BTC(value)'>
+            <option value="redeem">Redeem Packet</option>
+            <option value="create">Create Packet</option>
+            <option value="buy">Buy BTC</option>
+            <option value="sell">Sell BTC</option>
+          </select>
+          <div id="OptionArea"></div>
+        </div>
       </div>
     </div>
     <div id="TaskWindow" class="resizeable">
@@ -212,6 +213,29 @@ if(isset($_SESSION['id']) ){
         <div id="NPCList"></div>
         <div id="PlayerListCollapse" onclick="OpenClose('PlayerList')">Players</div>
         <div id="PlayerList"></div>
+      </div>
+    </div>
+    <div id="GateWindow" class="resizeable">
+      <div id="GateWindowresize-tleft" class="resize"></div>
+      <div id="GateWindowresize-tright" class="resize"></div>
+      <div id="GateWindowresize-bleft" class="resize"></div>
+      <div id="GateWindowresize-bright" class="resize"></div>
+      <div id="GateWindowheader">
+        <div id="GateTitle"><b>Gateway</b></div>
+        <div id="buttons">
+          <img src="Pictures/reload.png" id="reload" width="15px" onclick="reload();">
+          <img src="Pictures/close.png" id='close' width="15px" onclick="OpenClose('GateWindow');">
+        </div>
+      </div>
+      <div id="GateArea">
+        <div id="Gateleft">
+          <img class="dropbtn" src="Pictures/stats.png" width="45px" onclick="gateway('stats')">
+          <img class="dropbtn" src="Pictures/cpu.png" width="45px" onclick="gateway('cpu')">
+          <img class="dropbtn" src="Pictures/network.png" width="45px" onclick="gateway('network')">
+          <img class="dropbtn" src="Pictures/harddrive.png" width="45px" onclick="gateway('harddrive')">
+          <img class="dropbtn" src="Pictures/nas.png" width="45px" onclick="gateway('nas')">
+        </div>
+        <div id="Gateright"></div>
       </div>
     </div>
     <div id="UpdateWindow">
