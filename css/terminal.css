@@ -53,10 +53,6 @@ th{
 #command-input {
   padding-bottom: 10px;
 }
-#file-output {
-  font-size: 12px;
-  padding: 1px;
-}
 #termarea, #send-message {
   font-size: 15px;
   outline: none;

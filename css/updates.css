@@ -1,0 +1,55 @@
+#unclickable {
+  position: absolute;
+  top:0px;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:200;
+  background-color: rgba(0,0,0,0.7);
+}
+
+#UpdateWindow {
+  position: absolute;
+  z-index: 201;
+  background: black;
+  border: 1px solid white;
+  min-height: 290px;
+  min-width: 440px;
+  overflow: hidden;
+  border-radius: 8px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#UpdateWindowheader {
+  border: 1px solid white;
+  padding: 10px;
+  height: 15px;
+  background-color: grey;
+  color: #fff;
+}
+#UpdateTitle {
+  font-size: 12px;
+  position: absolute;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  text-shadow: 1px 1px black;
+  cursor: default;
+}
+
+#UpdateArea {
+  overflow: auto;
+  width: 100%;
+  height: calc(100% - 37px);
+  position: absolute;
+}
+
+#UpdateText {
+  color: white;
+  padding:5px;
+}
+
+#reload {
+  float: left;
+}

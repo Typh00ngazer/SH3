@@ -65,6 +65,7 @@ function submit(e, textarea) {
 }
   
 function makeRequest(url, command) {
+  httpRequest = new XMLHttpRequest();
   httpRequest.onreadystatechange = alertContents;
   httpRequest.open('POST', url);
   httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -329,4 +330,17 @@ function BTC(option) {
 
 function Finances() {
   makeRequest('php/commands.php', "Finances");
+}
+
+function onLoad() {
+  makeRequest('php/commands.php', "list");
+  setTimeout(function(){ makeRequest('php/commands.php', "Finances"); }, 1000);
+  storage = localStorage.getItem("updates");
+  if (storage !== "seen") {
+    document.body.innerHTML += "<div id='unclickable'></div>";
+    document.body.innerHTML += '<link href="css/updates.css" rel="stylesheet" type="text/css">'
+    localStorage.setItem("updates", "seen");
+  } else {
+    document.getElementById("UpdateWindow").remove();
+  }
 }

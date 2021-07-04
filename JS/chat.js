@@ -77,6 +77,7 @@ function connect(ip1, ip2) {
 function logsRequest(url, command) {
   remotelog.innerHTML = "";
   locallog.innerHTML = "";
+  httpRequest = new XMLHttpRequest();
   httpRequest.onreadystatechange = alertLogs;
   httpRequest.open('POST', url);
   httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -92,11 +93,11 @@ function alertLogs() {
         makeLog = response.logsL;
         makeLog1 = response.logsR;
         logTO = locallog;
-        x=1
+        x=1;
       } else if (response.rANDl === "false") {
         makeLog = response.logs;
         logTO = locallog;
-        x=2
+        x=2;
       }
       for (;x<=2;x++) {
         for (i in makeLog) {

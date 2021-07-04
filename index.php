@@ -214,6 +214,40 @@ if(isset($_SESSION['id']) ){
         <div id="PlayerList"></div>
       </div>
     </div>
+    <div id="UpdateWindow">
+      <div id="UpdateWindowheader">
+        <div id="UpdateTitle"><b>Updates</b></div>
+        <div id="buttons">
+          <img src="Pictures/close.png" id='close' width="15px" onclick="OpenClose('UpdateWindow');">
+        </div>
+      </div>
+      <div id="UpdateArea">
+        <div id="UpdateText">
+          <b>ToDo List:</b><br><br>
+
+          Add missions which gives money and rep <br><br>
+          Make a gateway to show player stats and hardware <br><br>
+          Allow players to upgrade stats with money and when added btc <br><br>
+          Make npc/player list only list ips that you have found <br><br>
+          Task manager and delayed tasks based on hardware <br><br>
+          Place special files on certain npcs <br><br>
+          Add a way to use inventory items <br><br>
+          Add clickable icons to browser of main pages like the market <br><br>
+          Buying stuff from market costs money <br><br>
+          Btc covertion to money and money to btc <br><br>
+          Notepad and user notes on npcs/players <br><br>
+          Make chat more secure so players cant fake there username <br><br>
+          Add a bit more style to the game <br><br>
+          Harass jesse about how good my game is <br><br>
+          Clean up some of the code and continue to harass jesse <br><br>
+
+          <b>Done:</b> <br><br>
+
+          Done - Make npc/player list and finance list load when the page is first loaded<br><br>
+          Done - Make a update notification pop up when there has been a change
+        </div>
+      </div>
+    </div>
   </div>
 </body>
   <footer>

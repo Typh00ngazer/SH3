@@ -6,11 +6,11 @@ this was made using php-7.4 im unsure if it will work in other versions but you 
 
 # TODO
 
-Make a update notification pop up when there has been a change
+Working on - **Make a update notification pop up when there has been a change**
 Add missions which gives money and rep
 Make a gateway to show player stats and hardware
 Allow players to upgrade stats with money and when added btc
-Make npc/player list and finance list load when the page is first loaded
+Done - ~~Make npc/player list and finance list load when the page is first loaded~~
 Make npc/player list only list ips that you have found
 Task manager and delayed tasks based on hardware
 Place special files on certain npcs

@@ -16,15 +16,15 @@ if (wIndexArray !== null) {
 }
 
 window.onload = function() {
-  if (window.XMLHttpRequest) { // Mozilla, Safari, IE7+ ...
-    httpRequest = new XMLHttpRequest();
-  } else if (window.ActiveXObject) { // IE 6 and older
-    httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
-  }
+  // if (window.XMLHttpRequest) { // Mozilla, Safari, IE7+ ...
+  //   httpRequest = new XMLHttpRequest();
+  // } else if (window.ActiveXObject) { // IE 6 and older
+  //   httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+  // }
   logsRequest('php/logs.php', "0,"+currentIP);
   document.getElementById("termarea").value = "";
 
-  makeRequest('php/commands.php', "list");
+  onLoad();
 
   for(var i = 0; i < wIndexArray.length; i++) {
     if (wIndexArray[i] === 'player') {
@@ -100,12 +100,17 @@ function popup() {
 
 function OpenClose(id) {
   elmnt = document.getElementById(id);
-  if (elmnt.style.display === "none") {
-    elmnt.style.display = "block";
-    localStorage.setItem(id+'Active', 'opened');
+  if (elmnt.id == "UpdateWindow") {
+    document.getElementById("unclickable").remove();
+    elmnt.remove();
   } else {
-    elmnt.style.display = "none";
-    localStorage.setItem(id+'Active', 'closed');
+    if (elmnt.style.display === "none") {
+      elmnt.style.display = "block";
+      localStorage.setItem(id+'Active', 'opened');
+    } else {
+      elmnt.style.display = "none";
+      localStorage.setItem(id+'Active', 'closed');
+    }
   }
 }
 
