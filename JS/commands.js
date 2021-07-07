@@ -2,6 +2,7 @@ connectedIP = document.getElementById("connectedIP");
 termarea = document.getElementById("termarea");
 notifyArea = document.getElementById("notify");
 BrowserArea = document.getElementById("BrowserArea");
+chatArea = document.getElementById("user-messages");
 
 function submit(e, textarea) {
   if (e.keyCode === 13) {
@@ -230,6 +231,29 @@ function alertContents() {
           }
           gateright.innerHTML = reName + response.stat + reEnd;
         }
+      } else if (response.command === "loadmessages") {
+        console.log(response.lines);
+        chatArea.innerHTML = "";
+        lastNameUsed = "";
+        lastIDUsed = 0;
+        for (i=0; i in response.lines; i++) {
+          if (response.lines[i] != false) {
+            array = response.lines[i].replace("\n", "<br>").split("=>");
+            insertName = array[0];
+            date = array[1];
+            message = array[2];
+            if (lastNameUsed == insertName) {
+              appendTo = document.getElementById(lastIDUsed).querySelector('[id=message]');
+              appendTo.innerHTML += `${message}`
+            } else {
+              divID = Math.floor(Math.random() * 100000);
+              lastNameUsed = insertName;
+              lastIDUsed = divID;
+              chatArea.innerHTML += "<div id='"+ divID +"'>" + `<div id='title'>${date}| ${insertName}</div><div id='message'>${message}</div></div>`
+            }
+            chatArea.scrollTo(0, chatArea.scrollHeight)
+          }
+        }
       }
     } else {
       alert('There was a problem with the request.');
@@ -286,8 +310,10 @@ function notify(lifespan, type, message) {
   }
 }
 
-function reload() {
-  if(document.getElementById('MarketSell')) {
+function reload(id) {
+  if (id == "chat") {
+    makeRequest('php/commands.php', "message=");
+  } else if(id == "MarketSell") {
     BrowserArea.innerHTML = "<style> #BrowserArea {background-color: black;} </style><textarea id='searchbar' style='overflow: hidden;' spellcheck='false' rows='1' onkeypress='search(event, this)' wrap='off'></textarea>"
     makeRequest('php/commands.php', "blackmarket");
   } else {
@@ -355,6 +381,8 @@ function Finances() {
 function onLoad() {
   makeRequest('php/commands.php', "list");
   setTimeout(function(){ makeRequest('php/commands.php', "Finances"); }, 1000);
+  setTimeout(function(){ makeRequest('php/commands.php', "message="); }, 2000);
+  setTimeout(function(){ makeRequest('php/commands.php', "stats"); }, 3000);
   storage = localStorage.getItem("updates");
   if (storage !== "seen") {
     document.body.innerHTML += "<div id='unclickable'></div>";
@@ -367,4 +395,24 @@ function onLoad() {
 
 function gateway(requested) {
   makeRequest('php/commands.php', requested);
+}
+
+const sendChat = (e, textarea) => {
+  if (e.keyCode === 13) {
+    e.preventDefault();
+    message = textarea.value.trim()
+    textarea.value = "";
+    function formatAMPM() {
+      today = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Chicago"}));
+      var hours = today.getHours();
+      var minutes = today.getMinutes();
+      var ampm = hours >= 12 ? 'pm' : 'am';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      minutes = minutes < 10 ? '0'+minutes : minutes;
+      var strTime = hours + ':' + minutes + ' ' + ampm;
+      return strTime;
+    }
+    makeRequest('php/commands.php', 'message='+message);
+  }
 }

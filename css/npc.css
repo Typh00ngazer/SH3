@@ -47,7 +47,8 @@
 }
 
 #NPCArea {
-  overflow: auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
   width: 100%;
   height: calc(100% - 37px);
   position: absolute;

@@ -5,23 +5,10 @@ session_start();
 require 'php/db.php';
 
 if(isset($_SESSION['id']) ){
-
-  $id = $_SESSION['id'];
   $User['id'] = $_SESSION['id'];
   $User['username'] = $_SESSION['username'];
   $User['email'] = $_SESSION['email'];
   $User['ip'] = $_SESSION['ip'];
-
-	$sql = "SELECT id,email,`password` FROM users WHERE id = '$id'";
-	$query = $conn->query($sql);
-    while($result = $query->fetch_assoc()){
-      $results = $result['email'];
-    }
-
-	if(isset($results)){} else {
-		header("Location: http://localhost:3000/logout.php");
-	}
-
 } else {
   header("Location: http://localhost:3000/logout.php");
 }
@@ -35,7 +22,6 @@ if(isset($_SESSION['id']) ){
   <link href="css/chat.css" rel="stylesheet" type="text/css">
   <link href="css/browser.css" rel="stylesheet" type="text/css">
   <link href="css/finances.css" rel="stylesheet" type="text/css">
-  <link href="css/task.css" rel="stylesheet" type="text/css">
   <link href="css/npc.css" rel="stylesheet" type="text/css">
   <link href="css/gate.css" rel="stylesheet" type="text/css">
   <title>SH3?</title>
@@ -122,6 +108,7 @@ if(isset($_SESSION['id']) ){
       <div id="ChatWindowheader">
         <div id="ChatTitle"><b>Chat</b></div>
         <div id="buttons">
+          <img src="Pictures/reload.png" id="reload" width="15px" onclick="reload('chat');">
           <img src="Pictures/close.png" width="15px" onclick="OpenClose('ChatWindow');">
         </div>
       </div>
@@ -137,7 +124,7 @@ if(isset($_SESSION['id']) ){
       <div id="BrowserWindowheader">
         <div id="BrowserTitle"><b>Browser</b></div>
         <div id="buttons">
-          <img src="Pictures/reload.png" id="reload" width="15px" onclick="reload();">
+          <img src="Pictures/reload.png" id="reload" width="15px" onclick="reload('MarketSell');">
           <img src="Pictures/close.png" id='close' width="15px" onclick="OpenClose('BrowserWindow');">
         </div>
       </div>
@@ -181,20 +168,6 @@ if(isset($_SESSION['id']) ){
           <div id="OptionArea"></div>
         </div>
       </div>
-    </div>
-    <div id="TaskWindow" class="resizeable">
-      <div id="TaskWindowresize-tleft" class="resize"></div>
-      <div id="TaskWindowresize-tright" class="resize"></div>
-      <div id="TaskWindowresize-bleft" class="resize"></div>
-      <div id="TaskWindowresize-bright" class="resize"></div>
-      <div id="TaskWindowheader">
-        <div id="TaskTitle"><b>Task</b></div>
-        <div id="buttons">
-          <img src="Pictures/reload.png" id="reload" width="15px" onclick="reload();">
-          <img src="Pictures/close.png" id='close' width="15px" onclick="OpenClose('TaskWindow');">
-        </div>
-      </div>
-      <div id="TaskArea"></div>
     </div>
     <div id="NPCWindow" class="resizeable">
       <div id="NPCWindowresize-tleft" class="resize"></div>
@@ -242,7 +215,7 @@ if(isset($_SESSION['id']) ){
       <div id="UpdateWindowheader">
         <div id="UpdateTitle"><b>Updates</b></div>
         <div id="buttons">
-          <img src="Pictures/close.png" id='close' width="15px" onclick="OpenClose('UpdateWindow');">
+          <img src="Pictures/close.png" id='close' width="15px" onclick="location.reload();">
         </div>
       </div>
       <div id="UpdateArea">
@@ -260,7 +233,6 @@ if(isset($_SESSION['id']) ){
           Buying stuff from market costs money <br><br>
           Btc covertion to money and money to btc <br><br>
           Notepad and user notes on npcs/players <br><br>
-          Make chat more secure so players cant fake there username <br><br>
           Add a bit more style to the game <br><br>
           Harass jesse about how good my game is <br><br>
           Clean up some of the code and continue to harass jesse <br><br>
@@ -268,7 +240,8 @@ if(isset($_SESSION['id']) ){
           <b>Done:</b> <br><br>
 
           Make npc/player list and finance list load when the page is first loaded<br><br>
-          Make a update notification pop up when there has been a change
+          Make a update notification pop up when there has been a change<br><br>
+          Make chat more secure
         </div>
       </div>
     </div>
@@ -295,7 +268,6 @@ if(isset($_SESSION['id']) ){
 		</nav>	
   </footer>
   <script type="text/javascript" src="JS/commands.js"></script>
-  <script type="text/javascript" src="JS/chat.js"></script>
   <script type="text/javascript" src="JS/player.js"></script>
   <script type="text/javascript" src="JS/moveDIV.js"></script>
 </html>

@@ -707,7 +707,41 @@ if (strpos($command, 'connect') === 0 && preg_match('~[0-9]+~', $command)) {
         $echo = ['command' => 'stat', 'name' => $command, 'stat' => $requested];
     }
     echo json_encode($echo);
-} else {
+} else if (strpos($command, 'message=') === 0) {
+    $message = trim(str_replace("message=", "", $command));
+
+    if (!empty($message)) {
+        $message = substr($message,0,500);
+        $fp = fopen("messages.txt", "a") or die("Unable to open file!");
+        $date = date("H:i a");
+        fwrite($fp, "$name => $date => $message \n");
+        fclose($fp);
+        $fp = fopen("messages.txt", "r") or die("Unable to open file!");
+        $lines=array();
+        while(!feof($fp)) {
+            $line = fgets($fp, 1001);
+            array_push($lines, $line);
+            if (count($lines)>50) {
+                array_shift($lines);
+            }
+        }
+        fclose($fp);
+        $echo = ['command' => 'loadmessages', 'lines' => $lines];
+    } else {
+        $fp = fopen("messages.txt", "r") or die("Unable to open file!");
+        $lines=array();
+        while(!feof($fp)) {
+            $line = fgets($fp, 1001);
+            array_push($lines, $line);
+            if (count($lines)>50) {
+                array_shift($lines);
+            }
+        }
+        fclose($fp);
+        $echo = ['command' => 'loadmessages', 'lines' => $lines];
+    }
+    echo json_encode($echo);
+}  else {
     $echo = ['command' => 'none'];
     echo json_encode($echo);
 }

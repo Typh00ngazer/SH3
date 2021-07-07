@@ -4,7 +4,6 @@ logs = document.getElementById("LogsWindow");
 chat = document.getElementById("ChatWindow");
 browser = document.getElementById("BrowserWindow");
 finances = document.getElementById("FinancesWindow");
-task = document.getElementById("TaskWindow");
 npc = document.getElementById("NPCWindow");
 gate = document.getElementById("GateWindow");
 
@@ -12,7 +11,7 @@ let wIndexArray = localStorage.getItem('wIndexArray');
 if (wIndexArray !== null) {
   wIndexArray = wIndexArray.split(',');
 } else {
-  wIndexArray = ['player', 'chat', 'npc', 'browser', 'gate', 'finances', 'logs', 'task', 'terminal',];
+  wIndexArray = ['player', 'chat', 'npc', 'browser', 'gate', 'finances', 'logs', 'terminal',];
   localStorage.setItem('wIndexArray', wIndexArray);
 }
 
@@ -22,7 +21,6 @@ window.onload = function() {
   // } else if (window.ActiveXObject) { // IE 6 and older
   //   httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
   // }
-  logsRequest('php/logs.php', "0,"+currentIP);
   document.getElementById("termarea").value = "";
 
   onLoad();
@@ -40,14 +38,12 @@ window.onload = function() {
       chat.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'finances') {
       finances.style.zIndex = i+1;
-    } else if (wIndexArray[i] === 'task') {
-      task.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'npc') {
       npc.style.zIndex = i+1;
     }
   }
 
-  ajustW = ['TermWindow', 'LogsWindow', 'ChatWindow','BrowserWindow', 'GateWindow', 'audio-player-cont', 'FinancesWindow', 'TaskWindow', 'NPCWindow'];
+  ajustW = ['TermWindow', 'LogsWindow', 'ChatWindow','BrowserWindow', 'GateWindow', 'audio-player-cont', 'FinancesWindow', 'NPCWindow'];
   for(var i = 0; i < ajustW.length; i++) {
     elmnt = document.getElementById(ajustW[i]);
     storage = localStorage.getItem(ajustW[i]);
@@ -120,7 +116,6 @@ resizeElemnt(logs);
 resizeElemnt(chat);
 resizeElemnt(browser);
 resizeElemnt(finances);
-resizeElemnt(task);
 resizeElemnt(npc);
 resizeElemnt(gate);
 
@@ -204,7 +199,6 @@ dragElement(chat);
 dragElement(browser);
 dragElement(player);
 dragElement(finances);
-dragElement(task);
 dragElement(npc);
 dragElement(gate);
     
@@ -382,33 +376,6 @@ chat.addEventListener('mousedown', e => {
 finances.addEventListener('mousedown', e => {
   wIndexArray = wIndexArray.filter(e => e !== 'finances');
   wIndexArray.push('finances');
-  localStorage.setItem('wIndexArray', wIndexArray);
-  for(var i = 0; i < wIndexArray.length; i++) {
-    if (wIndexArray[i] === 'player') {
-      player.style.zIndex = i+1;
-    } else if (wIndexArray[i] === 'logs') {
-      logs.style.zIndex = i+1;
-    } else if (wIndexArray[i] === 'chat') {
-      chat.style.zIndex = i+1;
-    } else if (wIndexArray[i] === 'browser') {
-      browser.style.zIndex = i+1;
-    } else if (wIndexArray[i] === 'terminal') {
-      terminal.style.zIndex = i+1;
-    } else if (wIndexArray[i] === 'finances') {
-      finances.style.zIndex = i+1;
-    } else if (wIndexArray[i] === 'task') {
-      task.style.zIndex = i+1;
-    } else if (wIndexArray[i] === 'npc') {
-      npc.style.zIndex = i+1;
-    } else if (wIndexArray[i] === 'gate') {
-      gate.style.zIndex = i+1;
-    }
-  }
-});
-
-task.addEventListener('mousedown', e => {
-  wIndexArray = wIndexArray.filter(e => e !== 'task');
-  wIndexArray.push('task');
   localStorage.setItem('wIndexArray', wIndexArray);
   for(var i = 0; i < wIndexArray.length; i++) {
     if (wIndexArray[i] === 'player') {

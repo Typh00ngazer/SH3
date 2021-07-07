@@ -44,3 +44,10 @@
   padding-left: 5px;
   width: calc(100% - 6px);
 }
+#title {
+  font-weight: bold;
+  font-size: 90%;
+}
+#message {
+  padding:5px;
+}
