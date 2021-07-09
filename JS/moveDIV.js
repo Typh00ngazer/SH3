@@ -256,7 +256,7 @@ terminal.addEventListener('mousedown', e => {
     } else if (wIndexArray[i] === 'finances') {
       finances.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'task') {
-      task.style.zIndex = i+1;
+      //task.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'npc') {
       npc.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'gate') {
@@ -283,7 +283,7 @@ player.addEventListener('mousedown', e => {
     } else if (wIndexArray[i] === 'finances') {
       finances.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'task') {
-      task.style.zIndex = i+1;
+      //task.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'npc') {
       npc.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'gate') {
@@ -310,7 +310,7 @@ logs.addEventListener('mousedown', e => {
     } else if (wIndexArray[i] === 'finances') {
       finances.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'task') {
-      task.style.zIndex = i+1;
+      //task.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'npc') {
       npc.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'gate') {
@@ -337,7 +337,7 @@ browser.addEventListener('mousedown', e => {
     } else if (wIndexArray[i] === 'finances') {
       finances.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'task') {
-      task.style.zIndex = i+1;
+      //task.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'npc') {
       npc.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'gate') {
@@ -364,7 +364,7 @@ chat.addEventListener('mousedown', e => {
     } else if (wIndexArray[i] === 'finances') {
       finances.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'task') {
-      task.style.zIndex = i+1;
+      //task.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'npc') {
       npc.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'gate') {
@@ -391,7 +391,7 @@ finances.addEventListener('mousedown', e => {
     } else if (wIndexArray[i] === 'finances') {
       finances.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'task') {
-      task.style.zIndex = i+1;
+      //task.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'npc') {
       npc.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'gate') {
@@ -418,7 +418,7 @@ npc.addEventListener('mousedown', e => {
     } else if (wIndexArray[i] === 'finances') {
       finances.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'task') {
-      task.style.zIndex = i+1;
+      //task.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'npc') {
       npc.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'gate') {
@@ -445,7 +445,7 @@ gate.addEventListener('mousedown', e => {
     } else if (wIndexArray[i] === 'finances') {
       finances.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'task') {
-      task.style.zIndex = i+1;
+      //task.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'npc') {
       npc.style.zIndex = i+1;
     } else if (wIndexArray[i] === 'gate') {

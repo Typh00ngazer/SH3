@@ -6,37 +6,35 @@ if(isset($_SESSION['id']) ){
 	header("Location: /");
 }
 
+if (empty($_POST['email']) || empty($_POST['password'])) {
+	$message = 'Make sure all fields are filled out';
+	goto end;
+}
+	
+$email = $_POST['email'];
+$password = $_POST['password'];
+
 require 'php/db.php';
 
-if(!empty($_POST['email']) && !empty($_POST['password'])) {
-	
-	$email = $_POST['email'];
-	$password = $_POST['password'];
-
-	$sql = "SELECT id, `username`, email, `password`, ip FROM users WHERE email = '$email'";
-	$query = $conn->query($sql);
-    while($result = $query->fetch_assoc()){
-		$user['id'] = $result['id'];
-		$user['username'] = $result['username'];
-		$user['email'] = $result['email'];
-		$user['ip'] = $result['ip'];
-		$DBpass = $result['password'];
-    }
-
-	$message = '';
-
-	if($DBpass == true && password_verify($password, $DBpass)) {
-
-		$_SESSION['id'] = $user['id'];
-		$_SESSION['username'] = $user['username'];
-		$_SESSION['email'] = $user['email'];
-		$_SESSION['ip'] = $user['ip'];
-		header("Location: /");
-
-	} else {
-		$message = 'Sorry, those credentials do not match';
-	}
+//check if account exists in db
+$sql = "SELECT id, `username`, email, `password`, ip FROM users WHERE email = '$email'";
+$query = $conn->query($sql);
+$result = $query->fetch_assoc();
+if (empty($result)) {
+	$message = 'Invalid login attempt';
+	goto end;
 }
+
+if(password_verify($password, $result['password'])) {
+	$_SESSION['id'] = $result['id'];
+	$_SESSION['username'] = $result['username'];
+	$_SESSION['email'] = $result['email'];
+	$_SESSION['ip'] = $result['ip'];
+	header("Location: /");
+} else {
+	$message = 'Sorry, those credentials do not match';
+}
+end:
 
 ?>
 
@@ -62,8 +60,8 @@ if(!empty($_POST['email']) && !empty($_POST['password'])) {
 
 	<form action="login.php" method="POST">
 		
-		<input type="text" placeholder="Enter your email" name="email">
-		<input type="password" placeholder="and password" name="password">
+		<input type="text" placeholder="Enter your email" name="email" required>
+		<input type="password" placeholder="and password" name="password" required>
 
 		<input type="submit">
 
